@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "SmartWaterMonitor",
+			"path": "../../Documents/PlatformIO/Projects/SmartWaterMonitor"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "Smart Water Monitor"
+	}
+}

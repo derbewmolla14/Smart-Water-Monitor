@@ -11,9 +11,9 @@ const io = new Server(server);
 
 // 1. የ Frontend ፋይሎች እንዲታዩ
 app.use(express.static('public'));
-// 2. ከዳታቤዝ ጋር መገናኘት
-// በ Render ላይ MONGO_URI ካለ እሱን ይጠቀማል፣ ካልሆነ ግን Atlas ሊንኩን በቀጥታ ይጠቀማል
-const dbURI = process.env.MONGO_URI || 'mongodb+srv://derbewmolla14:1998molla@cluster0.emoozsr.mongodb.net/WaterMonitorDB?retryWrites=true&w=majority';
+
+// 2. ከዳታቤዝ ጋር መገናኘት// ከዳታቤዝ ጋር መገናኘት (ለ Render እና ለኮምፒውተርህ የሚሆን)
+const dbURI = process.env.MONGO_URI || 'mongodb://localhost:27017/waterMonitor';
 
 mongoose.connect(dbURI)
   .then(() => console.log('✅ ዳታቤዝ በስኬት ተገናኝቷል!'))
