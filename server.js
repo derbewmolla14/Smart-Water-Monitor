@@ -92,7 +92,7 @@ app.get('/download-excel', async (req, res) => {
 });
 
 // 6. ሰርቨሩን ማስነሻ (ሁልጊዜ መጨረሻ ላይ ይሁን)
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`🚀 ሰርቨሩ በ http://localhost:${PORT} ላይ በሰላም ተነስቷል!`);
 });
