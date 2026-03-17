@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="am">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Water Monitor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="field">
+        <div class="header">
+        <a href="about-app.html" class="about-btn  aheader1">About app Detail</a>
+        <a href="about-developer.html" class="dev-btn  aheader2">About developer</a>
+        </div>
+        <div class="container">
+            <header>
+                <h1>Smart Water Monitor 💧</h1>
+                <p id="date-time"></p>
+                <div style="margin-top: 20px;">
+                    <a href="/download-excel" class="download-btn">
+                        የExcel ሪፖርት አውርድ (Download Excel) 📥
+                    </a>
+                </div>
+            </header>
+
+            <div class="main-display">
+                <div class="tank-wrapper">
+                    <div class="water-tank">
+                        <div class="water-level" id="water-level" style="height: 65%;"></div>
+                    </div>
+                    <div class="percentage-text"><span id="percent-val">65</span>%</div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="card">
+                        <h3>ሁኔታ (Status)</h3>
+                        <p class="status-online">Online</p>
+                    </div>
+                    <div class="card">
+                        <h3>መጠን (Volume)</h3>
+                        <p><span id="volume-val">650</span> ሊትር</p>
+                    </div>
+                    <div class="card">
+                        <h3>ሙቀት (Temp)</h3>
+                        <p><span>24</span>°C</p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script src="server.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</body>
+
+</html>
+<!-- npm init -y -->
+<!-- npm install express socket.io -->

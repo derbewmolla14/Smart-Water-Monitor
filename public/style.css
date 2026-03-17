@@ -1,0 +1,286 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #aab5aa;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.field{
+    background-color: hwb(140 91% 7%);
+     width: 100%;
+    max-width: 800px;
+    padding-bottom: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 15px 6px rgba(165, 47, 47, 0.1);
+    text-align: center;
+    border-color: black;
+    align-items: center;
+    justify-items: center;
+
+}
+.header{
+    background: black;
+     width: 100%;
+    max-width: 780px;
+    top: 0%;
+    height: 60px;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    display: flex;
+    border-radius: 1rem;
+}
+
+
+.about-btn, .dev-btn {
+    background-color: #ffeb3b; /* ቢጫ ቀለም */
+    color: black;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 15px;
+    font-weight: bold;
+    display: inline-block;
+    margin: 10px;
+    border: 2px solid #fbc02d;
+}
+
+.about-btn:hover, .dev-btn:hover {
+    background-color: #fdd835;
+}
+
+.btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+.aheader1{
+    text-decoration: none;
+    margin-right: 50%;
+    right: 0%;
+    height: 20px;
+    left: 0%;
+    box-shadow: red 0 6px 4px;
+
+}
+.aheader2{
+    background: yellow;
+    right: 50%;
+    height: 20px;
+    left: 0%;
+    box-shadow: white 0 6px 4px;
+
+}
+.headers:hover{
+    background: white;
+    color: #000;
+    transition: 1.5s;
+}
+.container {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 15px 6px rgba(0,0,0,0.1);
+    text-align: center;
+    border-color: black;
+}
+
+header h1 { color: #007bff; margin-bottom: 5px; }
+
+/* የታንከሩ ዲዛይን */
+.tank-wrapper {
+    margin: 30px 0;
+    position: relative;
+    display: inline-block;
+}
+
+.water-tank {
+    width: 120px;
+    height: 180px;
+    border: 4px solid #333;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    background: #e9ecef;
+}
+
+.water-level {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: linear-gradient(to top, #007bff, #00c6ff);
+    transition: height 1s ease-in-out; /* የውሃው መጠን ሲጨምር በተቀላጠፈ ሁኔታ እንዲታይ */
+}
+
+.percentage-text {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* የመረጃ ካርዶች አቀማመጥ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.card {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 5px solid #007bff;
+}
+
+.card h3 { font-size: 14px; margin: 0; color: #666; }
+.card p { font-size: 18px; font-weight: bold; margin: 5px 0; }
+.status-online { color: #28a745; }
+
+  /* Animation */
+@keyframes wave {
+    0% {
+        transform: translateX(0) rotate(0deg);
+    }
+    100% {
+        transform: translateX(-50%) rotate(360deg);
+    }
+}
+
+
+.download-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #28a745; /* አረንጓዴ ቀለም ለ Excel */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.download-btn:hover {
+    background-color: #218838;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+
+
+
+/* ABOUT APP HTML */
+.video-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+iframe {
+    max-width: 100%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* ABOUT DEVELOPER */
+
+
+.lang-switch {
+    margin-bottom: 20px;
+    text-align: right;
+}
+
+.lang-switch button {
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-left: 5px;
+}
+
+.lang-switch button:hover {
+    background-color: #ffeb3b; /* ያንተ ቢጫ ቀለም */
+}
+.about-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    line-height: 1.6;
+    text-align: left;
+}
+
+.section-title {
+    color: #2c3e50;
+    border-bottom: 3px solid #f1c40f; /* ቢጫ መስመር */
+    display: inline-block;
+}
+
+.skills-grid {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+.skill-item {
+    background: #e1f5fe;
+    padding: 8px 15px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #0288d1;
+}
+
+.vision-box {
+    background: #fff9c4;
+    padding: 15px;
+    border-left: 5px solid #fbc02d;
+    font-style: italic;
+}
+
+
+
+/* vision box */
+
+.vision-wrapper {
+    margin: 30px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.vision-box {
+    background: linear-gradient(135deg, #fff9c4 0%, #fbc02d 100%);
+    padding: 20px 40px;
+    border-radius: 50px 5px 50px 5px; /* ልዩ የሆነ ቅርጽ */
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 10px 20px rgba(251, 192, 45, 0.3);
+    border-left: 8px solid #2196F3; /* ሰማያዊ መስመር ለውሃ ማሳያ */
+    max-width: 80%;
+}
+
+.vision-icon {
+    font-size: 40px;
+}
+
+#vision-quote {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    font-style: italic;
+    margin: 0;
+}
+
+#vision-label {
+    margin: 0;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: #555;
+    letter-spacing: 1px;
+}
