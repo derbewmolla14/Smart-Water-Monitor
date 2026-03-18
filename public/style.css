@@ -177,10 +177,15 @@ header h1 { color: #007bff; margin-bottom: 5px; }
 .video-container {
     margin-top: 20px;
     text-align: center;
+    max-width: 90%;
+    justify-items: center;
+    align-items: center;
+    justify-content: center;
 }
 
 iframe {
-    max-width: 100%;
+    max-width: 90%;
+    justify-items: center;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
