@@ -65,42 +65,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // --- አዲስ የተጨመሩ የክፍያ ፈንክሽኖች ---
 
-function openPaymentModal() {
-    document.getElementById("paymentModal").style.display = "block";
-}
+// function openPaymentModal() {
+//     document.getElementById("paymentModal").style.display = "block";
+// }
 
-function closeModal() {
-    document.getElementById("paymentModal").style.display = "none";
-}
+// function closeModal() {
+//     document.getElementById("paymentModal").style.display = "none";
+// }
 
-async function processChapa(method) {
-    const email = localStorage.getItem("loggedUser");
-    const firstName = localStorage.getItem("loggedUserName") || "Customer";
+// async function processChapa(method) {
+//     const email = localStorage.getItem("loggedUser");
+//     const firstName = localStorage.getItem("loggedUserName") || "Customer";
     
-    try {
-        const response = await fetch('/initialize-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                email: email,
-                amount: 100,
-                first_name: firstName,
-                service: "Tanker Monitor",
-                method: method 
-            })
-        });
+//     try {
+//         const response = await fetch('/initialize-payment', {
+//             method: 'POST',
+//             headers: { 'Content-Type': 'application/json' },
+//             body: JSON.stringify({
+//                 email: email,
+//                 amount: 100,
+//                 first_name: firstName,
+//                 service: "Tanker Monitor",
+//                 method: method 
+//             })
+//         });
 
-        const data = await response.json();
+//         const data = await response.json();
         
-        if (data.checkout_url) {
-            window.location.href = data.checkout_url;
-        } else {
-            alert("ክፍያ መጀመር አልተቻለም");
-        }
-    } catch (error) {
-        console.error("Error:", error);
-        // ሰርቨሩ Render ላይ ተኝቶ ከሆነ ወይም ግንኙነት ከሌለ ለሙከራ እንዲሰራ፦
-        alert(method + " ክፍያ ተሳክቷል! ወደ ዳሽቦርድ እየወሰድንዎት ነው...");
-        window.location.href = "index.html";
-    }
+//         if (data.checkout_url) {
+//             window.location.href = data.checkout_url;
+//         } else {
+//             alert("ክፍያ መጀመር አልተቻለም");
+//         }
+//     } catch (error) {
+//         console.error("Error:", error);
+//         // ሰርቨሩ Render ላይ ተኝቶ ከሆነ ወይም ግንኙነት ከሌለ ለሙከራ እንዲሰራ፦
+//         alert(method + " ክፍያ ተሳክቷል! ወደ ዳሽቦርድ እየወሰድንዎት ነው...");
+//         window.location.href = "index.html";
+//     }
+// }
+
+function processChapa(method) {
+    // 1. ለተጠቃሚው መመሪያ መስጠት
+    const message = `ውድ ደንበኛችን፣ ${method} መርጠዋል።\n\nእባክዎ 100 ብር ወደ +251937100547 በቴሌብር ይላኩ።\n\nብር መላክዎን የሚያረጋግጥ የደረሰኝ ፎቶ (Screenshot) በቴሌግራም @MollaDebew (ወይም በስልክ ቁጥራችን) ይላኩልን።\n\nአመሰግናለን!`;
+    
+    alert(message);
+    
+    // 2. ለጊዜው ክፍያውን እንደፈጸመ ቆጥሮ ወደ ዳሽቦርድ እንዲያልፍ ማድረግ
+    // ማሳሰቢያ፡ ለወደፊት በ Chapa ስታስተካክለው ይህ መስመር ይቀየራል
+    console.log(`${method} ክፍያ በሂደት ላይ ነው...`);
+    
+    setTimeout(() => {
+        window.location.href = "index.html"; 
+    }, 500);
 }

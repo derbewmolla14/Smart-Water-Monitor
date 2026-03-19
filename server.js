@@ -12,7 +12,12 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 // --- 1. Middleware ---
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public', 'HTML')));
+app.use(express.static(path.join(__dirname, 'public', 'CSS')));
+app.use(express.static(path.join(__dirname, 'public', 'image')));
+app.use(express.static(path.join(__dirname, 'public', 'JS')));
+
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
