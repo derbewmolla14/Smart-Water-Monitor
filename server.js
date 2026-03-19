@@ -11,31 +11,38 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// --- 1. Middleware ---
+// --- 1. Middleware & Static Files ---
+// እነዚህ መስመሮች ሰርቨሩ በየፎልደሩ ገብቶ ፋይሎችን እንዲፈልግ ያደርጉታል
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public', 'HTML')));
 app.use(express.static(path.join(__dirname, 'public', 'CSS')));
-app.use(express.static(path.join(__dirname, 'public', 'image')));
+app.use(express.static(path.join(__dirname, 'public', 'images')));
 app.use(express.static(path.join(__dirname, 'public', 'JS')));
 
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
-// --- 2. Database Connection ---
+// --- 2. ROUTING (ዋናው መፍትሄ) ---
+// ተጠቃሚው ዋናውን ሊንክ ሲከፍት ቀጥታ login.html እንዲመጣለት
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'HTML', 'login.html'));
+});
+
+// --- 3. Database Connection ---
 const dbURI = process.env.MONGO_URI || 'mongodb+srv://derbewmolla14:1998molla@cluster0.emoozsr.mongodb.net/WaterMonitorDB?retryWrites=true&w=majority';
 
 mongoose.connect(dbURI)
   .then(() => console.log('✅ Database Connected!'))
   .catch(err => console.error('❌ DB Connection Error:', err));
 
-// --- 3. Data Schema ---
+// --- 4. Data Schema ---
 const waterLogSchema = new mongoose.Schema({
     level: Number,
     timestamp: { type: Date, default: Date.now }
 });
 const WaterLog = mongoose.model('WaterLog', waterLogSchema);
 
-// --- 4. Chapa Payment Integration ---
+// --- 5. Chapa Payment Integration ---
 app.post('/initialize-payment', async (req, res) => {
     const { email, amount, first_name, service } = req.body;
     const TX_REF = "TX-" + Date.now();
@@ -59,7 +66,7 @@ app.post('/initialize-payment', async (req, res) => {
     }
 });
 
-// --- 5. Sensor Update Level Route ---
+// --- 6. Sensor Update Level Route ---
 app.get('/update-level', async (req, res) => {
     const level = req.query.level;
     if (!level) return res.status(400).send("Level is required!");
@@ -75,7 +82,7 @@ app.get('/update-level', async (req, res) => {
     }
 });
 
-// --- 6. Get History (ለግራፍ ወይም ለዝርዝር) ---
+// --- 7. Get History ---
 app.get('/get-history', async (req, res) => {
     try {
         const history = await WaterLog.find().sort({ timestamp: -1 }).limit(20);
@@ -85,7 +92,7 @@ app.get('/get-history', async (req, res) => {
     }
 });
 
-// --- 7. Excel Download ---
+// --- 8. Excel Download ---
 app.get('/download-excel', async (req, res) => {
     try {
         const data = await WaterLog.find().sort({ timestamp: -1 });
