@@ -186,3 +186,59 @@ nav a {
         height: 200px;
     }
 }
+
+
+
+
+
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.service-card {
+    background: #1a1a1a;
+    color: white;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+    border: 1px solid #333;
+    transition: 0.3s;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    border-color: #007bff;
+}
+
+.service-card i {
+    font-size: 40px;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+.service-card h4 { margin-bottom: 10px; }
+.service-card p { font-size: 14px; color: #ccc; min-height: 60px; }
+
+.price {
+    display: block;
+    font-size: 20px;
+    font-weight: bold;
+    color: #28a745;
+    margin: 15px 0;
+}
+
+.service-card button {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.service-card button:hover { background: #0056b3; }

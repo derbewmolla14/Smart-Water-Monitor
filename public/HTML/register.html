@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+    <link rel="stylesheet" href="/public/CSS/login.css">
+</head>
+<body>
+
+    <div class="form">
+        <h2>Create Account</h2>
+        
+        <input type="text" id="firstname" placeholder="First Name">
+        <input type="text" id="lastname" placeholder="Last Name">
+        <input type="text" id="username" placeholder="Username">
+        <input type="email" id="email" placeholder="Email">
+        <input type="text" id="phone" placeholder="Phone Number">
+        <input type="password" id="password" placeholder="Password">
+        
+        <div id="strength"></div>
+        <input type="text" id="country" placeholder="e.g Ethiopia">
+        <input type="file" id="images" class="headerimg">
+        
+        <label for="gender">Gender</label>
+        <select id="gender">
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select><br><br>
+
+        <button onclick="sendCode();">Send Phone Code</button>
+        <input type="text" id="otp" placeholder="Enter OTP">
+
+        <button onclick="register();">Register</button>
+
+        <p>Already have account? <a href="login.html">Login</a></p>
+    </div>
+
+    <script src="/public/JS/general.js"></script>
+</body>
+</html>

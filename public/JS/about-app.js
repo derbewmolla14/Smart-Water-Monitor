@@ -42,7 +42,7 @@ const translations = {
 };
 
 function changeLang(lang) {
-    console.log("Changing language to: " + lang); // ቼክ ለማድረግ
+    console.log("Changing language to: " + lang); 
     for (let id in translations[lang]) {
         const element = document.getElementById(id);
         if (element) {
@@ -52,8 +52,55 @@ function changeLang(lang) {
     localStorage.setItem('selectedLang', lang);
 }
 
-// ገጹ ሲከፈት
+// ገጹ ሲከፈት ቋንቋ እና ሎጊን ቼክ ማድረግ
 document.addEventListener("DOMContentLoaded", () => {
     const savedLang = localStorage.getItem('selectedLang') || 'am';
     changeLang(savedLang);
+
+    if (localStorage.getItem("isLoggedIn") !== "true") {
+        alert("ይህንን ገጽ ለማግኘት እባክዎ መጀመሪያ ይግቡ!");
+        window.location.href = "login.html";
+    }
 });
+
+// --- አዲስ የተጨመሩ የክፍያ ፈንክሽኖች ---
+
+function openPaymentModal() {
+    document.getElementById("paymentModal").style.display = "block";
+}
+
+function closeModal() {
+    document.getElementById("paymentModal").style.display = "none";
+}
+
+async function processChapa(method) {
+    const email = localStorage.getItem("loggedUser");
+    const firstName = localStorage.getItem("loggedUserName") || "Customer";
+    
+    try {
+        const response = await fetch('/initialize-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: email,
+                amount: 100,
+                first_name: firstName,
+                service: "Tanker Monitor",
+                method: method 
+            })
+        });
+
+        const data = await response.json();
+        
+        if (data.checkout_url) {
+            window.location.href = data.checkout_url;
+        } else {
+            alert("ክፍያ መጀመር አልተቻለም");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        // ሰርቨሩ Render ላይ ተኝቶ ከሆነ ወይም ግንኙነት ከሌለ ለሙከራ እንዲሰራ፦
+        alert(method + " ክፍያ ተሳክቷል! ወደ ዳሽቦርድ እየወሰድንዎት ነው...");
+        window.location.href = "index.html";
+    }
+}

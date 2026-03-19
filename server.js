@@ -4,95 +4,101 @@ const { Server } = require('socket.io');
 const path = require('path');
 const mongoose = require('mongoose');
 const ExcelJS = require('exceljs');
+const axios = require('axios');
+const bodyParser = require('body-parser');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// 1. የ Frontend ፋይሎች እንዲታዩ
+// --- 1. Middleware ---
 app.use(express.static('public'));
-// 2. ከዳታቤዝ ጋር መገናኘት
-// በ Render ላይ MONGO_URI ካለ እሱን ይጠቀማል፣ ካልሆነ ግን Atlas ሊንኩን በቀጥታ ይጠቀማል
+app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+
+// --- 2. Database Connection ---
 const dbURI = process.env.MONGO_URI || 'mongodb+srv://derbewmolla14:1998molla@cluster0.emoozsr.mongodb.net/WaterMonitorDB?retryWrites=true&w=majority';
 
 mongoose.connect(dbURI)
-  .then(() => console.log('✅ ዳታቤዝ በስኬት ተገናኝቷል!'))
-  .catch(err => console.error('❌ የዳታቤዝ ግንኙነት አልተሳካም:', err));
+  .then(() => console.log('✅ Database Connected!'))
+  .catch(err => console.error('❌ DB Connection Error:', err));
 
-// 3. የዳታ አወቃቀር (Schema)
+// --- 3. Data Schema ---
 const waterLogSchema = new mongoose.Schema({
     level: Number,
     timestamp: { type: Date, default: Date.now }
 });
 const WaterLog = mongoose.model('WaterLog', waterLogSchema);
 
-// 4. መረጃ መቀበያ (Update Level)
-app.get('/update-level', async (req, res) => {
-    const level = req.query.level;
-
-    if (!level) {
-        return res.status(400).send("እባክህ የውሃ መጠን (level) ጨምር!");
-    }
-
-    console.log("ከሴንሰሩ የመጣ መረጃ:", level);
+// --- 4. Chapa Payment Integration ---
+app.post('/initialize-payment', async (req, res) => {
+    const { email, amount, first_name, service } = req.body;
+    const TX_REF = "TX-" + Date.now();
 
     try {
-        // ለዳሽቦርዱ በ Socket.io ወዲያውኑ ላክ
-        io.emit('levelUpdate', level);
-
-        // ዳታቤዝ ውስጥ አስቀምጥ
-        if (mongoose.connection.readyState === 1) {
-            const newLog = new WaterLog({ level: level });
-            await newLog.save();
-        }
-
-        res.send(`ዳታው ደርሶናል: ${level}%`);
+        const response = await axios.post('https://api.chapa.co/v1/transaction/initialize', {
+            amount: amount,
+            currency: "ETB",
+            email: email,
+            first_name: first_name,
+            tx_ref: TX_REF,
+            return_url: "https://smart-water-monitor-7kui.onrender.com/index.html", 
+            callback_url: "https://smart-water-monitor-7kui.onrender.com/verify-payment/" + TX_REF,
+            customization: { title: service, description: "Payment for " + service }
+        }, {
+            headers: { Authorization: `Bearer CHASECK_TEST-xxxxxxxxxxxx` } // የ Chapa Key እዚህ ይግባ
+        });
+        res.json(response.data.data); 
     } catch (error) {
-        console.error("ስህተት:", error);
-        res.status(500).send("የውስጥ ሰርቨር ስህተት");
+        res.status(500).json({ error: "ክፍያ መጀመር አልተቻለም" });
     }
 });
 
-// 5. Excel ማውረጃ
+// --- 5. Sensor Update Level Route ---
+app.get('/update-level', async (req, res) => {
+    const level = req.query.level;
+    if (!level) return res.status(400).send("Level is required!");
+
+    io.emit('levelUpdate', level);
+
+    try {
+        const newLog = new WaterLog({ level: level });
+        await newLog.save();
+        res.send(`Data Saved: ${level}%`);
+    } catch (error) {
+        res.status(500).send("Database Error");
+    }
+});
+
+// --- 6. Get History (ለግራፍ ወይም ለዝርዝር) ---
+app.get('/get-history', async (req, res) => {
+    try {
+        const history = await WaterLog.find().sort({ timestamp: -1 }).limit(20);
+        res.json(history);
+    } catch (error) {
+        res.status(500).send("Error fetching history");
+    }
+});
+
+// --- 7. Excel Download ---
 app.get('/download-excel', async (req, res) => {
     try {
         const data = await WaterLog.find().sort({ timestamp: -1 });
-
         let workbook = new ExcelJS.Workbook();
         let worksheet = workbook.addWorksheet('Water Logs');
-
         worksheet.columns = [
-            { header: 'ቀን እና ሰዓት', key: 'timestamp', width: 25 },
-            { header: 'የውሃ መጠን (%)', key: 'level', width: 15 },
-            { header: 'ሁኔታ', key: 'status', width: 15 }
+            { header: 'Date', key: 'timestamp', width: 25 },
+            { header: 'Level (%)', key: 'level', width: 15 }
         ];
-
-        if (data.length > 0) {
-            data.forEach(log => {
-                worksheet.addRow({
-                    timestamp: log.timestamp ? log.timestamp.toLocaleString('am-ET') : 'N/A',
-                    level: log.level,
-                    status: log.level < 20 ? 'ዝቅተኛ' : 'በቂ'
-                });
-            });
-        } else {
-            worksheet.addRow({ timestamp: 'ምንም ዳታ የለም', level: '-', status: '-' });
-        }
-
+        data.forEach(log => worksheet.addRow({ timestamp: log.timestamp.toLocaleString(), level: log.level }));
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', 'attachment; filename=WaterMonitor_Report.xlsx');
-
+        res.setHeader('Content-Disposition', 'attachment; filename=WaterReport.xlsx');
         await workbook.xlsx.write(res);
         res.end();
-
     } catch (error) {
-        console.error("Excel Error:", error);
-        res.status(500).send("Excel ፋይሉን ማዘጋጀት አልተቻለም። ስህተት፦ " + error.message);
+        res.status(500).send("Excel Error");
     }
 });
 
-// 6. ሰርቨሩን ማስነሻ (ሁልጊዜ መጨረሻ ላይ ይሁን)
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => {
-    console.log(`🚀 ሰርቨሩ በ http://localhost:${PORT} ላይ በሰላም ተነስቷል!`);
-});
+server.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));

@@ -1,3 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto Condensed", sans-serif;
+    /* border:.1rem solid red; */
+}
+*{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family: Arial, Helvetica, sans-serif;
+    }
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #aab5aa;
@@ -288,4 +302,67 @@ iframe {
     text-transform: uppercase;
     color: #555;
     letter-spacing: 1px;
+}
+/* --- የሞባይል እይታ (Mobile View) --- */
+@media screen and (max-width: 600px) {
+    body {
+        padding: 10px; /* በጎንና በጎን ያለውን ክፍት ቦታ ይቀንሳል */
+    }
+
+    .field {
+        max-width: 100%; /* ሙሉ ስፋት እንዲይዝ ያደርገዋል */
+        padding: 10px;
+    }
+
+    .header {
+        flex-direction: column; /* ቁልፎቹ አንዱ ከሌላው በታች እንዲሆኑ */
+        height: auto;
+        padding: 15px;
+    }
+
+    .about-btn, .dev-btn {
+        width: 90%; /* ቁልፎቹ እንዲሰፉ ያደርጋል */
+        margin: 5px 0;
+        text-align: center;
+        margin-right: 0; /* የድሮውን Margin ያጠፋል */
+    }
+
+    .aheader1, .aheader2 {
+        margin-right: 0;
+        right: auto;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr; /* ካርዶቹ በረድፍ ፋንታ አንዱ ከሌላው በታች እንዲሆኑ */
+    }
+
+    .tank-wrapper {
+        margin: 20px 0;
+    }
+
+    .water-tank {
+        width: 100px; /* በሞባይል ትንሽ እንዲያንስ */
+        height: 150px;
+    }
+
+    header h1 {
+        font-size: 1.5rem; /* የርዕሱ ጽሁፍ መጠን */
+    }
+
+    .vision-box {
+        max-width: 100%;
+        flex-direction: column; /* ቪዥን ቦክስ ውስጥ ያሉት ነገሮች በቁመት እንዲሆኑ */
+        text-align: center;
+        padding: 15px;
+    }
+
+    iframe {
+        width: 100%; /* ቪዲዮው ከስልኩ ስፋት ጋር እንዲስተካከል */
+        height: auto;
+    }
 }

@@ -1,0 +1,124 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+
+:root {
+    --lead: #212121;
+    --golden-finger: #F2BD12;
+    --eye-ball: #FFFDF7;
+    --hint-yellow: #FCF1CC;
+    --pure-white: #FFFFFF;
+}
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-image:url(/images/images/image/images/good\ wallpaper.jpg);
+height:150vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:Arial;
+margin:0;
+}
+
+.form{
+background:white;
+padding:40px;
+height: 100%;
+width:400px;
+border-radius:10px;
+box-shadow:0 10px 20px rgba(0,0,0,0.2);
+}
+.forget-passward{
+    text-decoration: none;
+}
+h2{
+text-align:center;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:5px;
+border:1px solid #ccc;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#2f8f88;
+color:white;
+border:none;
+border-radius:6px;
+cursor:pointer;
+}
+
+button:hover{
+background:#267872;
+}
+
+.social{
+margin-top:10px;
+}
+
+.google{
+background:#db4437;
+}
+
+.facebook{
+background:#4267B2;
+}
+
+header{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+background:#2f8f88;
+color:white;
+display:flex;
+justify-content:space-between;
+padding:10px 20px;
+}
+/* DARK MODE */
+
+.dark{
+background:#1e1e1e;
+color:rgb(134, 0, 0);
+}
+
+.dark .auth-container{
+background:#2a2a2a;
+}
+
+.theme-toggle{
+position:absolute;
+top:20px;
+right:20px;
+}
+
+
+#gender{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:5px;
+border:1px solid #ccc;
+}
+.headerimg1{
+    width: 50px;
+    border-radius: 100%;
+}
+.headerimg{
+    justify-content: space-between;
+}
+#image1{
+    margin-right: 65%;
+}
