@@ -146,17 +146,37 @@ document.addEventListener("DOMContentLoaded", () => {
     // ስለዚህ ለጊዜው ቼኩን ዳሽቦርድ ላይ ብቻ አድርገው
 });
 
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'public/uploads/receipts'); // አንተ የከፈትከው ፎልደር
-    },
-    filename: (req, file, cb) => {
-        // ስሙ እንዳይደጋገም ሰዓት እና የተጠቃሚ ስም እንጨምርበታለን
-        const uniqueName = Date.now() + '-' + file.originalname;
-        cb(null, uniqueName);
+
+// ምስልን ወደ ሰርቨር ለመላክ (Upload) የሚያገለግል
+async function uploadReceipt() {
+    const fileInput = document.getElementById('receiptfile'); // በ HTML ላይ ያለህ የፋይል መምረጫ ID
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("እባክዎ መጀመሪያ የደረሰኝ ፎቶ ይምረጡ!");
+        return;
     }
-});
 
-const upload = multer({ storage: storage });
+    const formData = new FormData();
+    formData.append('receipt', file);
+    // ከተፈለገ የተጠቃሚ ስም መጨመር ይቻላል
+    formData.append('username', localStorage.getItem('loggedUser') || 'Guest');
 
+    try {
+        const response = await fetch('/submit-payment', {
+            method: 'POST',
+            body: formData
+        });
 
+        const result = await response.json();
+        if (result.success) {
+            alert("ደረሰኙ በትክክል ተልኳል! አድሚን እስኪያጸድቅልዎ ይጠብቁ።");
+            closeModal(); // ሞዳሉን መዝጋት
+        } else {
+            alert("ስህተት፡ " + result.message);
+        }
+    } catch (error) {
+        console.error("Upload Error:", error);
+        alert("ከሰርቨር ጋር መገናኘት አልተቻለም።");
+    }
+}
