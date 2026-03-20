@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 // script.js
-const socket = io("https://smart-water-monitor-7kui.onrender.com"); 
+socket = io("https://smart-water-monitor-7kui.onrender.com"); 
 
 socket.on("connect", () => {
     console.log("Connected to Server!");
