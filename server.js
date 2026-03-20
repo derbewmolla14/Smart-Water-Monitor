@@ -5,6 +5,11 @@ const { Server } = require('socket.io');
 const path = require('path');
 const mongoose = require('mongoose');
 
+const multer = require('multer');
+const fs = require('fs');
+const ExcelJS = require('exceljs'); // ከላይ መኖሩን አረጋግጥ
+
+
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -78,7 +83,6 @@ app.get('/get-history', async (req, res) => {
     }
 });
 
-const ExcelJS = require('exceljs'); // ከላይ መኖሩን አረጋግጥ
 
 app.get('/download-excel', async (req, res) => {
     try {
@@ -125,8 +129,7 @@ server.listen(PORT, () => {
 });
 
 
-const multer = require('multer');
-const path = require('path');
+
 
 // ፎቶው የሚቀመጥበት ቦታ (uploads ፎልደር ውስጥ)
 const storage = multer.diskStorage({
@@ -152,14 +155,12 @@ app.post('/submit-payment', upload.single('receipt'), (req, res) => {
                 filePath: `/uploads/receipts/${req.file.filename}` });
 });
 
-const fs = require('fs');
 const uploadDir = './public/uploads/receipts';
 
 if (!fs.existsSync(uploadDir)){
     fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-const fs = require('fs');
 
 // ሁሉንም ደረሰኞች ለይቶ የሚያወጣ API
 app.get('/admin/receipts', (req, res) => {
