@@ -145,4 +145,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // ማሳሰቢያ፡ እዚህ ገጽ ላይ ሎጊን ቼክ ካደረግክ ሰው ገና አፑን ሳያይ ይባረራል
     // ስለዚህ ለጊዜው ቼኩን ዳሽቦርድ ላይ ብቻ አድርገው
 });
+const multer = require('multer');
+const path = require('path');
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/uploads/receipts'); // አንተ የከፈትከው ፎልደር
+    },
+    filename: (req, file, cb) => {
+        // ስሙ እንዳይደጋገም ሰዓት እና የተጠቃሚ ስም እንጨምርበታለን
+        const uniqueName = Date.now() + '-' + file.originalname;
+        cb(null, uniqueName);
+    }
+});
+
+const upload = multer({ storage: storage });
+
 

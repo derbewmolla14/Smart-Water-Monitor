@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="/CSS/about.css">
+    <style>
+        .login-box { max-width: 400px; margin: 100px auto; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: center; }
+        input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body style="background: #f4f7f6;">
+    <div class="login-box">
+        <h2>Admin Login</h2>
+        <p>እባክዎ የአድሚን የይለፍ ቃል ያስገቡ</p>
+        <input type="password" id="adminPass" placeholder="Password...">
+        <button onclick="checkAdmin()">ግባ</button>
+    </div>
+
+    <script>
+        async function checkAdmin() {
+            const password = document.getElementById('adminPass').value;
+            const response = await fetch('/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password })
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                // ለጊዜው በ SessionStorage አድሚን መሆኑን እንመዘግባለን
+                sessionStorage.setItem('isAdmin', 'true');
+                window.location.href = 'admin-dashboard.html';
+            } else {
+                alert(result.message);
+            }
+        }
+    </script>
+</body>
+</html>

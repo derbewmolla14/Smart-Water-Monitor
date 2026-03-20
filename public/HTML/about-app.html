@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>main Menu</title>
+    <title>Smart Water Monitor - Main Menu</title>
     <link rel="stylesheet" href="/CSS/about.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -14,14 +14,14 @@
         <div class="logo">Smart Water Monitor</div>
         <nav>
             <a href="about-app.html">Home</a>
-            <a href="https://www.Ahadu_Tech_Academy.com" target="_blank" id="academy-btn" class="academy-btn">Ahadu Tech
-                Academy</a>
+            <a href="https://www.Ahadu_Tech_Academy.com" target="_blank" id="academy-btn" class="academy-btn">Ahadu Tech Academy</a>
         </nav>
         <div class="lang-switch">
             <button onclick="changeLang('am')">አማርኛ</button>
             <button onclick="changeLang('en')">English</button>
         </div>
     </header>
+
     <div class="container">
         <h1 id="app-title">ስለ Smart Water Monitor</h1>
 
@@ -30,103 +30,92 @@
             <p id="app-intro">ይህ ሲስተም የውሃ ማጠራቀሚያ ታንከሮችን መጠን በዘመናዊ መንገድ ለመቆጣጠር ታስቦ የተሰራ ነው። ሲስተሙ ሶስት ዋና ዋና ክፍሎች አሉት፦</p>
 
             <ul class="feature-list">
-                <li><strong>Hardware:</strong> <span id="hw-desc">በታንከሩ አናት ላይ የሚገጠመው Ultrasonic Sensor የውሃውን ርቀት
-                        ይለካል።</span></li>
-                <li><strong>Server:</strong> <span id="srv-desc">ESP32 መረጃውን በ Wi-Fi አማካኝነት ለ Node.js ሰርቨር ይልካል።</span>
-                </li>
-                <li><strong>Web Dashboard:</strong> <span id="web-desc-list">ተጠቃሚው በየትኛውም ቦታ ሆኖ በድረ-ገጹ ላይ የውሃውን መጠን
-                        በፐርሰንት (%) ያያል።</span></li>
+                <li><strong>Hardware:</strong> <span id="hw-desc">በታንከሩ አናት ላይ የሚገጠመው Ultrasonic Sensor የውሃውን ርቀት ይለካል።</span></li>
+                <li><strong>Server:</strong> <span id="srv-desc">ESP32 መረጃውን በ Wi-Fi አማካኝነት ለ Node.js ሰርቨር ይልካል።</span></li>
+                <li><strong>Web Dashboard:</strong> <span id="web-desc-list">ተጠቃሚው በየትኛውም ቦታ ሆኖ በድረ-ገጹ ላይ የውሃውን መጠን በፐርሰንት (%) ያያል።</span></li>
             </ul>
         </div>
 
-        <div class="web-features">
+        <div class="services-section">
+            <h3 id="services-title">የአገልግሎት ዝርዝር እና ክፍያ</h3>
+            <div class="services-grid">
 
-            <div class="services-section">
-                <h3 id="services-title">የአገልግሎት ዝርዝር እና ክፍያ</h3>
-                <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-tint"></i>
+                    <h4 class="ta-title">Tanker Amount Monitor</h4>
+                    <p class="ta-desc">የታንከርዎን የውሃ መጠን በማንኛውም ቦታ ሆነው ለመቆጣጠር።</p>
+                    <span class="price">100 ETB</span>
+                    <button onclick="openPaymentModal('Tanker Monitor')" class="pay-btn">አሁኑኑ ይክፈሉ</button>
+                </div>
 
-                    <div id="paymentModal" class="modal"
-                        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000;">
-                        <div
-                            style="background:#222; width:300px; margin:100px auto; padding:20px; border-radius:15px; text-align:center; color:white; border:1px solid #007bff;">
-                            <h4>የክፍያ ዘዴ ይምረጡ</h4>
-                            <div style="display:grid; gap:10px; margin-top:20px;">
-                                <button onclick="handlePayment('telebirr')"
-                                    style="background:#00aae4; color:white; padding:10px; border:none; border-radius:5px; cursor:pointer;">Telebirr</button>
-                                <button onclick="handlePayment('cbe')"
-                                    style="background:#7b2b8d; color:white; padding:10px; border:none; border-radius:5px; cursor:pointer;">CBE
-                                    Birr</button>
-                                <button onclick="handlePayment('abyssinia')"
-                                    style="background:#fdb913; color:black; padding:10px; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">Abyssinia</button>
-                                <button onclick="handlePayment('paypal')"
-                                    style="background:#003087; color:white; padding:10px; border:none; border-radius:5px; cursor:pointer;">PayPal</button>
-                                <button onclick="closeModal()"
-                                    style="background:gray; color:white; padding:5px; margin-top:10px; border:none; border-radius:5px; cursor:pointer;">ተመለስ</button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="service-card">
+                    <i class="fas fa-vial"></i>
+                    <h4 class="qu-title">Water Quality</h4>
+                    <p class="qu-desc">የውሃውን ንጽህና፣ ፒኤች (pH) እና የባክቴሪያ መኖርን ለመለየት።</p>
+                    <span class="price">250 ETB</span>
+                    <button onclick="openPaymentModal('Water Quality')" class="pay-btn">አሁኑኑ ይክፈሉ</button>
+                </div>
 
-                    <div class="service-card">
-                        <i class="fas fa-tint"></i>
-                        <h4 class="ta-title">Tanker Amount Monitor</h4>
-                        <p class="ta-desc">የታንከርዎን የውሃ መጠን በማንኛውም ቦታ ሆነው ለመቆጣጠር።</p>
-                        <span class="price">100 ETB</span>
-                        <button onclick="openPaymentModal('index.html')" class="pay-btn">አሁኑኑ ይክፈሉ</button>
-                    </div>
+                <div class="service-card">
+                    <i class="fas fa-seedling"></i>
+                    <h4>Irrigation Soil Moisture</h4>
+                    <p id="irr-disc">የአፈርን እርጥበት በመለካት ለመስኖ እርሻዎ ተገቢውን ውሃ በሰዓቱ ለመስጠት።</p>
+                    <span class="price">300 ETB</span>
+                    <button onclick="openPaymentModal('Soil Moisture')" class="pay-btn">አሁኑኑ ይክፈሉ</button>
+                </div>
 
-                    <div class="service-card">
-                        <i class="fas fa-vial"></i>
-                        <h4 class="qu-title">Water Quality</h4>
-                        <p class="qu-desc">የውሃውን ንጽህና፣ ፒኤች (pH) እና የባክቴሪያ መኖርን ለመለየት።</p>
-                        <span class="price">250 ETB</span>
-                        <button onclick="openPaymentModal('water-quality.html')" class="pay-btn">አሁኑኑ ይክፈሉ</button>
-                    </div>
-
-                    <div class="service-card">
-                        <i class="fas fa-seedling"></i>
-                        <h4>Irrigation Soil Moisture</h4>
-                        <p id="irr-disc">የአፈርን እርጥበት በመለካት ለመስኖ እርሻዎ ተገቢውን ውሃ በሰዓቱ ለመስጠት።</p>
-                        <span class="price">300 ETB</span>
-                        <button onclick="openPaymentModal('soil-moisture.html')" class="pay-btn">አሁኑኑ ይክፈሉ</button>
-                    </div>
-                    <div class="service-card">
-                        <i class="fas fa-water"></i>
-                        <h4>Ground Water Level</h4>
-                        <p class="gr-disc">የከርሰ ምድር ውሃ ሲያልቅ ፓምፑ እንዳይቃጠል በራሱ እንዲያቆም የሚያደርግ።</p>
-                        <span class="price">400 ETB</span>
-                        <button onclick="openPaymentModal('ground-water-level.html')" class="pay-btn">አሁኑኑ ይክፈሉ</button>
-                    </div>
+                <div class="service-card">
+                    <i class="fas fa-water"></i>
+                    <h4>Ground Water Level</h4>
+                    <p class="gr-disc">የከርሰ ምድር ውሃ ሲያልቅ ፓምፑ እንዳይቃጠል በራሱ እንዲያቆም የሚያደርግ።</p>
+                    <span class="price">400 ETB</span>
+                    <button onclick="openPaymentModal('Ground Water')" class="pay-btn">አሁኑኑ ይክፈሉ</button>
                 </div>
             </div>
-            <header class="main-header">
-                <nav style="display: flex; align-items: center; gap: 20px;">
-                    <a href="trainings.html" class="academy-btn" style="background: #ff9800;">Web Trainings</a>
-                </nav>
-                <div class="logo">Smart Water Monitor</div>
-            </header>
+        </div>
 
-            <div class="service-card">
-                <i class="fas fa-laptop-code"></i>
-                <h4>Web Trainings</h4>
-                <p>ሁሉንም የዌብሳይት አጠቃቀም እና የቴክኖሎጂ ስልጠና ቪዲዮዎች እዚህ ያገኛሉ።</p>
-                <span class="price">Free / Premium</span>
-                <button onclick="window.location.href='trainings.html'">ስልጠናዎችን እይ</button>
+        <div class="service-card" style="margin-top: 30px;">
+            <i class="fas fa-laptop-code"></i>
+            <h4>Web Trainings</h4>
+            <p>ሁሉንም የዌብሳይት አጠቃቀም እና የቴክኖሎጂ ስልጠና ቪዲዮዎች እዚህ ያገኛሉ።</p>
+            <span class="price">Free / Premium</span>
+            <button onclick="window.location.href='trainings.html'">ስልጠናዎችን እይ</button>
+        </div>
+
+        <h3 id="web-title" style="margin-top: 40px;">የድረ-ገጹ (Web) ልዩ ባህሪያት</h3>
+        <div class="grid-container">
+            <div class="feature-box">
+                <h4 id="feat-1-h">Real-time Update</h4>
+                <p id="feat-1-p">መረጃው በቅጽበት (ያለ Refresh) ይቀየራል።</p>
             </div>
-            <h3 id="web-title">የድረ-ገጹ (Web) ልዩ ባህሪያት</h3>
-            <div class="grid-container">
-                <div class="feature-box">
-                    <h4 id="feat-1-h">Real-time Update</h4>
-                    <p id="feat-1-p">መረጃው በቅጽበት (ያለ Refresh) ይቀየራል።</p>
-                </div>
-                <div class="feature-box">
-                    <h4 id="feat-1-h">Excel Reports</h4>
-                    <p id="feat-2-p">የውሃ ፍጆታ ታሪክን በ Excel ማውረድ ይቻላል።</p>
-                </div>
-                <div class="feature-box">
-                    <h4 id="feat-3-h">Mobile Friendly</h4>
-                    <p id="feat-3-p">በስልክም ሆነ በኮምፒውተር ለመጠቀም ይመቻል።</p>
-                </div>
+            <div class="feature-box">
+                <h4 id="feat-1-h">Excel Reports</h4>
+                <p id="feat-2-p">የውሃ ፍጆታ ታሪክን በ Excel ማውረድ ይቻላል።</p>
             </div>
+            <div class="feature-box">
+                <h4 id="feat-3-h">Mobile Friendly</h4>
+                <p id="feat-3-p">በስልክም ሆነ በኮምፒውተር ለመጠቀም ይመቻል።</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="paymentModal" class="modal" style="display:none;">
+        <div class="modal-content-box">
+            <span onclick="closeModal()" class="close-modal">&times;</span>
+            <h3 id="pay-modal-title">የክፍያ መረጃ</h3>
+            <p id="pay-modal-desc">እባክዎ ከታች ባሉት አካውንቶች ክፍያ ፈጽመው ደረሰኙን ይላኩ።</p>
+            
+            <div class="account-info-box">
+                <p><strong>CBE:</strong> 100012345678 (Molla D.)</p>
+                <p><strong>Telebirr:</strong> 0937100547 (Molla D.)</p>
+            </div>
+
+            <form id="receiptForm" onsubmit="handleReceiptSubmit(event)">
+                <label id="upload-label">የደረሰኝ ፎቶ (Screenshot)፦</label>
+                <input type="file" id="receiptFile" accept="image/*" required>
+                <input type="hidden" id="selectedService">
+                <button type="submit" class="submit-pay-btn">ደረሰኝ ላክ</button>
+            </form>
         </div>
     </div>
 
@@ -141,21 +130,16 @@
             </div>
             <div class="social-icons">
                 <a href="about-developer.html">Know about developer.</a>
-                <a href="https://t.me/Ahadu_Tech_Academy" target="_blank" title="Telegram"><i
-                        class="fab fa-telegram"></i></a>
-                <a href="https://www.youtube.com/@AhaduTechAcademy" target="_blank" title="YouTube"><i
-                        class="fab fa-youtube"></i></a>
+                <a href="https://t.me/Ahadu_Tech_Academy" target="_blank" title="Telegram"><i class="fab fa-telegram"></i></a>
+                <a href="https://www.youtube.com/@AhaduTechAcademy" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
                 <a href="mailto:your-email@gmail.com" title="Google/Email"><i class="fab fa-google"></i></a>
-                <a href="https://linkedin.com/in/molla-derbew-b94204392" target="_blank" title="LinkedIn"><i
-                        class="fab fa-linkedin"></i></a>
-                <a href="https://www.instagram.com/derbew.m?utm_source=qr&igsh=cnV0dGhueGV0c2pl" target="_blank"
-                    title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://facebook.com/share/1GQufLrjbe/" target="_blank" title="Facebook"><i
-                        class="fab fa-facebook"></i></a>
+                <a href="https://linkedin.com/in/molla-derbew-b94204392" target="_blank" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://www.instagram.com/derbew.m?" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://facebook.com/share/1GQufLrjbe/" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
             </div>
         </div>
     </footer>
+
     <script src="/JS/about-app.js"></script>
 </body>
-
 </html>

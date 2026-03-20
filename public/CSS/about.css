@@ -177,13 +177,18 @@ nav a {
 .fa-facebook:hover { color: #1877f2; }
 
 /* Responsive adjustments */
-@media (max-width: 600px) {
+@media (max-width: 500px) {
     .main-header {
         flex-direction: column;
         gap: 10px;
     }
     .youtube-video {
         height: 200px;
+    }
+     .modal-content-box {
+        width: 85%;
+        padding: 20px;
+        margin: 30px auto;
     }
 }
 
@@ -242,3 +247,125 @@ nav a {
 }
 
 .service-card button:hover { background: #0056b3; }
+
+
+
+/* --- አዲስ የተጨመረ፡ የክፍያ ሞዳል (Payment Modal) ስታይል --- */
+
+/* ሞዳሉ በሙሉ ስክሪን እንዲሆን */
+.modal {
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0, 0, 0, 0.85); 
+    z-index: 2000; 
+    overflow-y: auto;
+    backdrop-filter: blur(5px); /* በስተጀርባ ያለውን ነገር ብዥ ያደርገዋል */
+}
+
+/* የሞዳሉ ሳጥን (Content Box) */
+.modal-content-box {
+    background: #1a1a1a; 
+    width: 90%; 
+    max-width: 450px; 
+    margin: 50px auto; 
+    padding: 30px; 
+    border-radius: 20px; 
+    text-align: center; 
+    color: white; 
+    border: 2px solid #007bff; 
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 123, 255, 0.3);
+    animation: slideIn 0.4s ease-out;
+}
+
+/* ሞዳሉ ሲከፈት የሚመጣበት አኒሜሽን */
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* የመዝጊያ ምልክት (X) */
+.close-modal {
+    position: absolute; 
+    right: 20px; 
+    top: 15px; 
+    font-size: 28px; 
+    cursor: pointer; 
+    color: #888;
+    transition: 0.3s;
+}
+
+.close-modal:hover {
+    color: #ff4d4d;
+}
+
+/* የባንክ አካውንት መረጃዎች ሳጥን */
+.account-info-box {
+    background: #252525; 
+    padding: 20px; 
+    border-radius: 12px; 
+    margin: 20px 0; 
+    text-align: left; 
+    border-left: 5px solid #007bff;
+}
+
+.account-info-box p {
+    margin: 8px 0;
+    font-size: 15px;
+    letter-spacing: 0.5px;
+}
+
+.account-info-box strong {
+    color: #1abc9c;
+}
+
+/* የፎርም ኤለመንቶች */
+#receiptForm label {
+    display: block; 
+    text-align: left;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #ccc;
+}
+
+#receiptFile {
+    width: 100%; 
+    padding: 12px; 
+    background: #333; 
+    border: 1px dashed #555; 
+    color: white; 
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+#receiptFile:hover {
+    border-color: #007bff;
+}
+
+/* የደረሰኝ መላኪያ በተን */
+.submit-pay-btn {
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    padding: 15px;
+    width: 100%;
+    border-radius: 10px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.submit-pay-btn:hover {
+    background: linear-gradient(135deg, #0056b3, #004085);
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+/* ስልክ ላይ ትንሽ እንዲጠጋጋ */

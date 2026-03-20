@@ -14,6 +14,7 @@ const io = new Server(server, {
 // --- 1. Static Files (CSS, JS, Images እንዲሰሩ) ---
 // ይህ መስመር ብራውዘሩ በ public ውስጥ ያሉትን CSS, JS እና images ፎልደሮች እንዲያገኝ ያደርጋል
 // እነዚህ በ server.js ውስጥ መኖራቸውን እርግጠኛ ሁን
+app.use(express.static('public'));
 app.use('/CSS', express.static(path.join(__dirname, 'public', 'CSS')));
 app.use('/JS', express.static(path.join(__dirname, 'public', 'JS')));
 app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
@@ -121,4 +122,72 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
     console.log(`🚀 HydroOS Server is Live!`);
     console.log(`🔗 Local Link: http://localhost:${PORT}`);
+});
+
+
+const multer = require('multer');
+const path = require('path');
+
+// ፎቶው የሚቀመጥበት ቦታ (uploads ፎልደር ውስጥ)
+const storage = multer.diskStorage({
+    destination: './uploads/receipts/',
+    filename: function(req, file, cb) {
+        cb(null, req.body.username + '-' + Date.now() + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
+
+// ደረሰኝ መቀበያ API
+app.post('/submit-payment', upload.single('receipt'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ success: false, message: "ምንም ፋይል አልተላከም" });
+    }
+
+    // እዚህ ጋር በዳታቤዝህ ውስጥ የክፍያውን ሁኔታ (Pending) መመዝገብ ትችላለህ
+    console.log(`ክፍያ መጥቷል ከ: ${req.body.username} ለ: ${req.body.serviceName}`);
+    
+    res.json({ success: true,
+                message: "ደረሰኙ ደርሶናል።",
+                filePath: `/uploads/receipts/${req.file.filename}` });
+});
+
+const fs = require('fs');
+const uploadDir = './public/uploads/receipts';
+
+if (!fs.existsSync(uploadDir)){
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const fs = require('fs');
+
+// ሁሉንም ደረሰኞች ለይቶ የሚያወጣ API
+app.get('/admin/receipts', (req, res) => {
+    const directoryPath = './public/uploads/receipts';
+    
+    fs.readdir(directoryPath, (err, files) => {
+        if (err) {
+            return res.status(500).send({ message: "ፋይሎቹን ማግኘት አልተቻለም" });
+        }
+        
+        // የፋይሎቹን ዝርዝር ወደ Frontend መላክ
+        const fileList = files.map(file => ({
+            name: file,
+            url: `/uploads/receipts/${file}`
+        }));
+        res.json(fileList);
+    });
+});
+
+
+// አድሚን መግቢያ (Login) API
+app.post('/admin/login', (req, res) => {
+    const { password } = req.body;
+    const ADMIN_PASSWORD = "your_secret_password"; // እዚህ ጋር የፈለግኸውን ሚስጥራዊ ቃል ቀይር
+
+    if (password === ADMIN_PASSWORD) {
+        res.json({ success: true, message: "እንኳን ደህና መጡ!" });
+    } else {
+        res.status(401).json({ success: false, message: "የገቡት የይለፍ ቃል የተሳሳተ ነው!" });
+    }
 });
