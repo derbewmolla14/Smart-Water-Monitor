@@ -181,26 +181,26 @@ socket.on("connect", () => {
 
 
 
-// ቋንቋ መቀየሪያ ተግባር
-let currentLang = localStorage.getItem("lang") || "en";
+// // ቋንቋ መቀየሪያ ተግባር
+// let currentLang = localStorage.getItem("lang") || "en";
 
-function updateUI() {
-    const elements = document.querySelectorAll("[data-en]");
-    elements.forEach(el => {
-        el.innerText = el.getAttribute(`data-${currentLang}`);
-    });
+// function updateUI() {
+//     const elements = document.querySelectorAll("[data-en]");
+//     elements.forEach(el => {
+//         el.innerText = el.getAttribute(`data-${currentLang}`);
+//     });
     
-    const btn = document.getElementById("lang-toggle");
-    if (btn) {
-        btn.innerText = currentLang === "en" ? "አማርኛ" : "English";
-    }
-}
+//     const btn = document.getElementById("lang-toggle");
+//     if (btn) {
+//         btn.innerText = currentLang === "en" ? "አማርኛ" : "English";
+//     }
+// }
 
-function toggleLanguage() {
-    currentLang = currentLang === "en" ? "am" : "en";
-    localStorage.setItem("lang", currentLang);
-    updateUI();
-}
+// function toggleLanguage() {
+//     currentLang = currentLang === "en" ? "am" : "en";
+//     localStorage.setItem("lang", currentLang);
+//     updateUI();
+// }
 
 // ገጹ ሲከፈት ያለውን ምርጫ ተግብር
 document.addEventListener("DOMContentLoaded", updateUI);

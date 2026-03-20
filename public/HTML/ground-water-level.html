@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groundwater Monitor | Wollo University</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ያንተን ቀለሞች ተጠቅሜያለሁ */
+        :root {
+            --water-blue: #2980b9;
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #f1f1f1;
+            --accent-blue: #3498db;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            margin: 0; padding: 0;
+        }
+
+        /* Header Section */
+        .ground-header {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1518081461904-9d8f136351c2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 250px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            border-bottom: 5px solid var(--water-blue);
+            text-align: center;
+        }
+
+        .container { max-width: 1100px; margin: -40px auto 50px; padding: 20px; }
+
+        /* Language Toggle */
+        .lang-container { display: flex; justify-content: flex-end; margin-bottom: 15px; }
+        .lang-btn {
+            background: var(--water-blue); color: white; border: none; padding: 8px 15px;
+            cursor: pointer; border-radius: 5px; margin-left: 10px; font-weight: bold;
+        }
+
+        /* Real-time Cards */
+        .data-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px; margin-top: 20px;
+        }
+
+        .data-card {
+            background: var(--card-bg); padding: 30px; border-radius: 20px;
+            text-align: center; border-top: 5px solid var(--water-blue);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        /* ውሃው ሲቀንስ እና ሲጨምር የሚንቀሳቀስ አኒሜሽን */
+        .depth-meter {
+            width: 100px; height: 150px; background: #333;
+            margin: 20px auto; border-radius: 10px; position: relative; overflow: hidden;
+            border: 3px solid #555;
+        }
+
+        .water-fill {
+            width: 100%; position: absolute; bottom: 0;
+            background: linear-gradient(to top, #2980b9, #3498db);
+            transition: height 2s ease-in-out;
+            animation: wave 3s infinite alternate;
+        }
+
+        @keyframes wave {
+            from { opacity: 0.8; } to { opacity: 1; }
+        }
+
+        .depth-val { font-size: 2.5rem; font-weight: bold; color: var(--accent-blue); }
+
+        .info-box {
+            background: #1a232e; padding: 20px; border-radius: 15px;
+            border-left: 8px solid var(--water-blue); margin-top: 30px;
+        }
+
+        .back-home {
+            display: inline-block; margin-top: 30px; padding: 12px 25px;
+            background: var(--water-blue); color: white; text-decoration: none;
+            border-radius: 50px; font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="ground-header">
+        <h1 id="h-title">Groundwater Level Monitoring</h1>
+        <p id="h-desc">የከርሰ ምድር ውሃ ጥልቀት እና ክምችት ክትትል ማዕከል</p>
+    </header>
+
+    <div class="container">
+        <div class="lang-container">
+            <button class="lang-btn" onclick="setLang('am')">አማርኛ</button>
+            <button class="lang-btn" onclick="setLang('en')">English</button>
+        </div>
+
+        <div class="data-grid">
+            <div class="data-card">
+                <h3 id="c1-title">የውሃ ጥልቀት (Depth)</h3>
+                <div class="depth-meter">
+                    <div class="water-fill" id="water-fill" style="height: 60%;"></div>
+                </div>
+                <div class="depth-val"><span id="depth-m">4.2</span> m</div>
+                <p id="depth-status">ሁኔታ፦ ደህና (Stable)</p>
+            </div>
+
+            <div class="data-card">
+                <i class="fas fa-database" style="font-size: 3rem; color: var(--water-blue); margin-bottom: 15px;"></i>
+                <h3 id="c2-title">የክምችት ሁኔታ</h3>
+                <div style="font-size: 1.5rem; margin: 20px 0;" id="storage-text">High Storage</div>
+                <p id="storage-desc">ለቀጣይ 3 ወራት በቂ ውሃ አለ።</p>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <h3 id="info-title"><i class="fas fa-info-circle"></i> ጠቃሚ መረጃ</h3>
+            <p id="info-text">የከርሰ ምድር ውሃ መጠንን መከታተል ለፓምፕ ደህንነት እና ለውሃ ብክነት መከላከያ ይጠቅማል።</p>
+        </div>
+
+        <center>
+            <a href="index.html" class="back-home" id="back-btn"><i class="fas fa-home"></i> ወደ ዋናው ገጽ ተመለስ</a>
+        </center>
+    </div>
+
+    <script>
+        const texts = {
+            am: {
+                title: "Groundwater Level Monitoring",
+                desc: "የከርሰ ምድር ውሃ ጥልቀት እና ክምችት ክትትል ማዕከል",
+                c1: "የውሃ ጥልቀት (Depth)",
+                c2: "የክምችት ሁኔታ",
+                infoT: "ጠቃሚ መረጃ",
+                infoP: "የከርሰ ምድር ውሃ መጠንን መከታተል ለፓምፕ ደህንነት እና ለውሃ ብክነት መከላከያ ይጠቅማል።",
+                back: "ወደ ዋናው ገጽ ተመለስ"
+            },
+            en: {
+                title: "Groundwater Level Monitoring",
+                desc: "Subsurface water depth and storage tracking center",
+                c1: "Water Depth",
+                c2: "Storage Status",
+                infoT: "Important Information",
+                infoP: "Monitoring groundwater levels is vital for pump safety and water conservation.",
+                back: "Back to Dashboard"
+            }
+        };
+
+        function setLang(l) {
+            document.getElementById('h-title').innerText = texts[l].title;
+            document.getElementById('h-desc').innerText = texts[l].desc;
+            document.getElementById('c1-title').innerText = texts[l].c1;
+            document.getElementById('c2-title').innerText = texts[l].c2;
+            document.getElementById('info-title').innerHTML = `<i class="fas fa-info-circle"></i> ${texts[l].infoT}`;
+            document.getElementById('info-text').innerText = texts[l].infoP;
+            document.getElementById('back-btn').innerHTML = `<i class="fas fa-home"></i> ${texts[l].back}`;
+        }
+
+        // ዳታውን ከሴንሰር እንደመጣ ለማስመሰል (Simulation)
+        function simulateGroundwater() {
+            let depth = (Math.random() * 10).toFixed(1); // 0-10 ሜትር
+            let fillPercent = 100 - (depth * 10); // ጥልቀቱ ሲጨምር ውሃው ዝቅ ይላል
+
+            document.getElementById('depth-m').innerText = depth;
+            document.getElementById('water-fill').style.height = fillPercent + "%";
+            
+            const status = document.getElementById('depth-status');
+            if(depth > 7) {
+                status.innerText = "ሁኔታ፦ ዝቅተኛ (Low Level)";
+                status.style.color = "#e74c3c";
+            } else {
+                status.innerText = "ሁኔታ፦ ደህና (Stable)";
+                status.style.color = "#2ecc71";
+            }
+        }
+
+        setInterval(simulateGroundwater, 5000);
+    </script>
+</body>
+</html>
