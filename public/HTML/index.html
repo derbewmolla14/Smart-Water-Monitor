@@ -11,7 +11,7 @@
 <body>
     <div class="field">
         <div class="header">
-        <a href="about-Smart-water-monitor.html" class="about-btn  aheader1">About Web</a>
+        <a href="about-app.html" class="about-btn  aheader1">HOME</a>
         <a href="about-developer.html" class="dev-btn  aheader2">About developer</a>
         </div>
         <div class="container">
@@ -51,8 +51,34 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+<script src="general.js"></script>
+<script>
+    // 1. መጀመሪያ Security Check
+    (function() {
+        if (localStorage.getItem("isLoggedIn") !== "true") {
+            window.location.href = "login.html";
+        } else {
+            console.log("Welcome " + localStorage.getItem("loggedUserName"));
+        }
+    })();
+
+    // 2. Socket.io ግንኙነት (አድራሻህን ተጠቀም)
+    const socket = io("https://smart-water-monitor-7kui.onrender.com");
+
+    socket.on('levelUpdate', (newLevel) => {
+        updateWaterLevel(newLevel);
+    });
+
+    // Logout ተግባር
+    function logout() {
+        localStorage.removeItem("isLoggedIn");
+        window.location.href = "login.html";
+    }
+</script>
     <script src="script.js"></script>
-    <script src="socket.io.js"></script>
+   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </body>
 
 </html>

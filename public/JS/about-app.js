@@ -1,3 +1,19 @@
+// Login በተኑ ሲነካ የሚሰራ ፋንክሽን
+function loginUser() {
+    // እዚህ ጋር የፓስወርድ ቼክ ማድረግ ትችላለህ
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    if (username === "admin" && password === "1234") { // ለምሳሌ
+        // በኮምፒውተሩ ላይ መግባቱን መመዝገብ
+        localStorage.setItem("isLoggedIn", "true");
+        // ወደ ቀጣዩ ገጽ መላክ
+        window.location.href = "about-app.html";
+    } else {
+        alert("ስህተት! እባክዎ ትክክለኛ መረጃ ያስገቡ።");
+    }
+}
+
 const translations = {
     am: {
         "app-title": "ስለ Smart Water Monitor",
@@ -93,3 +109,4 @@ document.addEventListener("DOMContentLoaded", () => {
     // ማሳሰቢያ፡ እዚህ ገጽ ላይ ሎጊን ቼክ ካደረግክ ሰው ገና አፑን ሳያይ ይባረራል
     // ስለዚህ ለጊዜው ቼኩን ዳሽቦርድ ላይ ብቻ አድርገው
 });
+
