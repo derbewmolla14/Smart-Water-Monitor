@@ -13,9 +13,22 @@ function loginUser() {
         alert("ስህተት! እባክዎ ትክክለኛ መረጃ ያስገቡ።");
     }
 }
-
 const translations = {
     am: {
+        // በአማርኛው (am) ውስጥ የሚጨመር
+        "ta-title": "የታንከር ውሃ መጠን መቆጣጠሪያ",
+        "ta-desc": "የታንከርዎን የውሃ መጠን በማንኛውም ቦታ ሆነው ለመቆጣጠር።",
+
+        "qu-title": "የውሃ ጥራት",
+        "qu-desc": "የውሃውን ንጽህና፣ ፒኤች (pH) እና የባክቴሪያ መኖርን ለመለየት።",
+        // --- አዲስ የተጨመሩ (Irrigation Card) ---
+        "irr_title": "የመስኖ አፈር እርጥበት",
+        "irr-desc": "የአፈርን እርጥበት በመለካት ለመስኖ እርሻዎ ተገቢውን ውሃ በሰዓቱ ለመስጠት።",
+        "pay-btn": "አሁኑኑ ይክፈሉ",
+        "gr-title": "የከርሰ ምድር ውሃ መጠን",
+        "gr-disc": "የከርሰ ምድር ውሃ ሲያልቅ ፓምፑ እንዳይቃጠል በራሱ እንዲያቆም የሚያደርግ።",
+
+        // --- የድሮዎቹ (About App) ---
         "app-title": "ስለ Smart Water Monitor",
         "how-it-works-title": "ሲስተሙ እንዴት ይሰራል?",
         "app-intro": "ይህ ሲስተም የውሃ ማጠራቀሚያ ታንከሮችን መጠን በዘመናዊ መንገድ ለመቆጣጠር ታስቦ የተሰራ ነው።",
@@ -33,6 +46,20 @@ const translations = {
         "footer-text": "© 2026 አሀዱ ቴክ አካዳሚ። መብቱ በህግ የተጠበቀ ነው።"
     },
     en: {
+        // በእንግሊዝኛው (en) ውስጥ የሚጨመር
+        "ta-title": "Tanker Amount Monitor",
+        "ta-desc": "Monitor your tank's water level from anywhere, anytime.",
+        "qu-title": "Water Quality",
+        "qu-desc": "Detect water purity, pH levels, and the presence of bacteria.",
+
+        // --- አዲስ የተጨመሩ (Irrigation Card) ---
+        "irr_title": "Irrigation Soil Moisture",
+        "irr-desc": "Measure soil moisture to provide the right amount of water to your irrigation farm on time.",
+        "pay-btn": "Pay Now",
+
+        "gr-title": "Ground Water Level",
+        "gr-disc": "Prevents the pump from burning out by automatically stopping it when groundwater runs out.",
+        // --- የድሮዎቹ (About App) ---
         "app-title": "About Smart Water Monitor",
         "how-it-works-title": "How it Works",
         "app-intro": "This system is designed to monitor water tank levels modernly.",
@@ -51,20 +78,29 @@ const translations = {
     }
 };
 
-// 1. የቋንቋ መቀየሪያ
+// 1. የቋንቋ መቀየሪያ ተግባር
 function changeLang(lang) {
+    if (!translations[lang]) return; // ጥንቃቄ፡ ቋንቋው ከሌለ ዝም እንዲል
+
     for (let id in translations[lang]) {
         const element = document.getElementById(id);
         if (element) {
             element.innerText = translations[lang][id];
         }
     }
+    // ምርጫውን በኮምፒውተሩ ላይ ማስቀመጥ
     localStorage.setItem('selectedLang', lang);
 }
 
+// ገጹ ሲከፈት የቀድሞውን ምርጫ በራሱ እንዲያመጣ
+document.addEventListener("DOMContentLoaded", () => {
+    const savedLang = localStorage.getItem('selectedLang') || 'am';
+    changeLang(savedLang);
+});
+
 // 2. Modal መክፈቻ (እነዚህ መስራት አለባቸው!)
 function openPaymentModal() {
-    console.log("Modal opening..."); 
+    console.log("Modal opening...");
     document.getElementById("paymentModal").style.display = "block";
 }
 
@@ -76,11 +112,11 @@ function closeModal() {
 // 4. የክፍያ ሂደት (የተስተካከለ)
 async function processChapa(method, targetPage) {
     const email = localStorage.getItem("loggedUser") || "guest@example.com";
-    
+
     // ለተጠቃሚው መመሪያ መስጠት
     const infoMessage = `ውድ ደንበኛችን በ ${method} በኩል ክፍያዎን ወደ +251937100547 ይላኩ። ከዛም ደረሰኙን በቴሌግራም ይላኩልን።`;
     alert(infoMessage);
-    
+
     // ተጠቃሚው ለዛ አገልግሎት የተመደበው ገጽ ላይ እንዲሄድ ማድረግ
     if (targetPage) {
         window.location.href = targetPage;
