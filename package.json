@@ -1,13 +1,14 @@
 {
   "name": "smart-water-monitor",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Smart Water Monitoring System",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Molla Debew",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
