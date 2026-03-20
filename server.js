@@ -28,6 +28,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'HTML', 'login.html'));
 });
 
+
 // --- 3. Database Connection ---
 const dbURI = process.env.MONGO_URI || 'mongodb+srv://derbewmolla14:1998molla@cluster0.emoozsr.mongodb.net/WaterMonitorDB?retryWrites=true&w=majority';
 

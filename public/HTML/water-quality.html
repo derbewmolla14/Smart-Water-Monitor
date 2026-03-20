@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Quality Monitoring | Wollo University Project</title>
+    <link rel="stylesheet" href="water-quality.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+   
+</head>
+<body>
+
+    <header class="quality-header">
+        <h1>Water Quality Dashboard</h1>
+        <p>Real-time Chemical & Biological Analysis</p>
+       
+    </header>
+ <div style="position: absolute; top: 20px; right: 20px; z-index: 100;">
+    <button onclick="changeSoilLang('am')" style="background: var(--farm-green); color: white; border: none; padding: 5px 15px; cursor: pointer; border-radius: 5px;">አማርኛ</button>
+    <button onclick="changeSoilLang('en')" style="background: white; color: black; border: none; padding: 5px 15px; cursor: pointer; border-radius: 5px;">English</button>
+</div>
+    <div class="container">
+        <div class="status-grid">
+            <div class="status-card">
+                <i class="fas fa-vial"></i>
+                <span class="label">pH Level</span>
+                <span class="value" id="ph-val">7.2</span>
+                <span style="color: var(--accent-green)">Optimal (Safe)</span>
+            </div>
+
+            <div class="status-card">
+                <i class="fas fa-cloud-showers-heavy"></i>
+                <span class="label">Turbidity (ንጽህና)</span>
+                <span class="value">0.5 NTU</span>
+                <span style="color: var(--accent-green)">Clear Water</span>
+            </div>
+
+            <div class="status-card">
+                <i class="fas fa-microbe"></i>
+                <span class="label">Bacteria Detection</span>
+                <span class="value">None</span>
+                <span style="color: var(--accent-green)">Safe to Drink</span>
+            </div>
+        </div>
+
+        <div class="advisor-note">
+            <h3><i class="fas fa-user-grad"></i> Advisor Information (Wollo University)</h3>
+            <p><strong>Project:</strong> Smart Water Monitor System (HydroOS)</p>
+            <p><strong>Goal:</strong> To provide real-time water quality monitoring using IoT (ESP32) and high-precision sensors to prevent waterborne diseases in Ethiopia.</p>
+            <p><i>"Software and Water Engineering combined to solve local community problems."</i></p>
+        </div>
+
+        <center>
+            <a href="about-app.html" class="back-btn"><i class="fas fa-arrow-left"></i> ወደ ዋናው ገጽ ተመለስ</a>
+        </center>
+    </div>
+    <script src="water-quality.js"></script>
+
+</body>
+</html>

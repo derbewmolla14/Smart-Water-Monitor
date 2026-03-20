@@ -113,7 +113,13 @@
 
 
 
+// ተጠቃሚው Login ማድረጉን ቼክ ማድረግ
+const loggedUser = localStorage.getItem("isLoggedIn");
 
+if (!loggedUser) {
+    // Login ካላደረገ ወደ login.html መልሰው
+    window.location.href = "login.html";
+}
 const socket = io();
 
 // 1. ሰዓት እና ቀን አድስ

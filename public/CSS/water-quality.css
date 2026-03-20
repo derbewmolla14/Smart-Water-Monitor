@@ -1,0 +1,114 @@
+        :root {
+            --primary-blue: #007bff;
+            --dark-bg: #121212;
+            --card-bg: #1e1e1e;
+            --text-white: #ffffff;
+            --accent-green: #2ecc71;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-white);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 🌟 በጣም የሚያምር Header */
+        .quality-header {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1581093458791-9f3c3900df4b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            border-bottom: 4px solid var(--primary-blue);
+        }
+
+        .quality-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .quality-header p {
+            font-size: 1.2rem;
+            color: #bdc3c7;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: -50px auto 50px;
+            padding: 20px;
+        }
+
+        /* 📊 የጥራት መለኪያ ካርዶች */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .status-card {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid #333;
+            transition: 0.3s;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .status-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-blue);
+        }
+
+        .status-card i {
+            font-size: 3rem;
+            color: var(--primary-blue);
+            margin-bottom: 15px;
+        }
+
+        .value {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+            margin: 10px 0;
+        }
+
+        .label {
+            color: #aaa;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        /* 🧪 Advisor Special Section */
+        .advisor-note {
+            background: #0d2137;
+            border-left: 5px solid var(--accent-green);
+            padding: 20px;
+            margin-top: 40px;
+            border-radius: 5px;
+        }
+
+        .advisor-note h3 {
+            color: var(--accent-green);
+            margin-top: 0;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            color: white;
+            text-decoration: none;
+            background: var(--primary-blue);
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+    

@@ -6,7 +6,6 @@ const translations = {
         "hw-desc": "በታንከሩ አናት ላይ የሚገጠመው Ultrasonic Sensor የውሃውን ርቀት ይለካል።",
         "srv-desc": "ESP32 መረጃውን በ Wi-Fi አማካኝነት ለ Node.js ሰርቨር ይልካል።",
         "web-desc-list": "ተጠቃሚው በየትኛውም ቦታ ሆኖ በድረ-ገጹ ላይ የውሃውን መጠን በፐርሰንት (%) ያያል።",
-        "video-title": "የአጠቃቀም መመሪያ ቪዲዮ",
         "web-title": "የድረ-ገጹ (Web) ልዩ ባህሪያት",
         "feat-1-h": "Real-time Update",
         "feat-1-p": "መረጃው በቅጽበት (ያለ Refresh) ይቀየራል።",
@@ -14,10 +13,8 @@ const translations = {
         "feat-2-p": "የውሃ ፍጆታ ታሪክን በ Excel ማውረድ ይቻላል።",
         "feat-3-h": "Mobile Friendly",
         "feat-3-p": "በስልክም ሆነ በኮምፒውተር ለመጠቀም ይመቻል።",
-        "academy-link": "አሀዱ ቴክ አካዳሚ",
         "phone-text": "ለበለጠ መረጃ ይደውሉልን፦",
-        "footer-text": "© 2026 አሀዱ ቴክ አካዳሚ። መብቱ በህግ የተጠበቀ ነው።",
-        "social-heading": "ሁሉንም ይከተሉ"
+        "footer-text": "© 2026 አሀዱ ቴክ አካዳሚ። መብቱ በህግ የተጠበቀ ነው።"
     },
     en: {
         "app-title": "About Smart Water Monitor",
@@ -26,7 +23,6 @@ const translations = {
         "hw-desc": "Ultrasonic Sensor mounted on top measures water distance.",
         "srv-desc": "ESP32 sends data to Node.js server via Wi-Fi.",
         "web-desc-list": "Users can see water level in percentage (%) from anywhere.",
-        "video-title": "User Guide Videos",
         "web-title": "Web Dashboard Features",
         "feat-1-h": "Real-time Update",
         "feat-1-p": "Updates instantly without refreshing the page.",
@@ -34,15 +30,13 @@ const translations = {
         "feat-2-p": "Download water consumption history in Excel.",
         "feat-3-h": "Mobile Friendly",
         "feat-3-p": "Perfectly fits both mobile and desktop screens.",
-        "academy-link": "Ahadu Tech Academy",
         "phone-text": "Contact us for more info:",
-        "footer-text": "© 2026 Ahadu Tech Academy. All Rights Reserved.",
-        "social-heading": "Follow us on all platforms"
+        "footer-text": "© 2026 Ahadu Tech Academy. All Rights Reserved."
     }
 };
 
+// 1. የቋንቋ መቀየሪያ
 function changeLang(lang) {
-    console.log("Changing language to: " + lang); 
     for (let id in translations[lang]) {
         const element = document.getElementById(id);
         if (element) {
@@ -52,70 +46,50 @@ function changeLang(lang) {
     localStorage.setItem('selectedLang', lang);
 }
 
-// ገጹ ሲከፈት ቋንቋ እና ሎጊን ቼክ ማድረግ
+// 2. Modal መክፈቻ (እነዚህ መስራት አለባቸው!)
+function openPaymentModal() {
+    console.log("Modal opening..."); 
+    document.getElementById("paymentModal").style.display = "block";
+}
+
+// 3. Modal መዝጊያ
+function closeModal() {
+    document.getElementById("paymentModal").style.display = "none";
+}
+
+// 4. የክፍያ ሂደት (የተስተካከለ)
+async function processChapa(method, targetPage) {
+    const email = localStorage.getItem("loggedUser") || "guest@example.com";
+    
+    // ለተጠቃሚው መመሪያ መስጠት
+    const infoMessage = `ውድ ደንበኛችን በ ${method} በኩል ክፍያዎን ወደ +251937100547 ይላኩ። ከዛም ደረሰኙን በቴሌግራም ይላኩልን።`;
+    alert(infoMessage);
+    
+    // ተጠቃሚው ለዛ አገልግሎት የተመደበው ገጽ ላይ እንዲሄድ ማድረግ
+    if (targetPage) {
+        window.location.href = targetPage;
+    } else {
+        window.location.href = "index.html"; // Default መድረሻ
+    }
+}
+
+// Modal ለመክፈት የምንጠቀመው ጊዜያዊ ተለዋዋጭ
+let currentTargetPage = "index.html";
+
+function openPaymentModal(page) {
+    currentTargetPage = page; // የትኛው ገጽ መሄድ እንዳለበት እናስቀምጣለን
+    document.getElementById("paymentModal").style.display = "block";
+}
+
+// በ Modal ውስጥ ያሉትን በተኖች ስንነካ
+function handlePayment(method) {
+    processChapa(method, currentTargetPage);
+}
+
+// 5. ገጹ ሲከፈት
 document.addEventListener("DOMContentLoaded", () => {
     const savedLang = localStorage.getItem('selectedLang') || 'am';
     changeLang(savedLang);
-
-    if (localStorage.getItem("isLoggedIn") !== "true") {
-        alert("ይህንን ገጽ ለማግኘት እባክዎ መጀመሪያ ይግቡ!");
-        window.location.href = "login.html";
-    }
+    // ማሳሰቢያ፡ እዚህ ገጽ ላይ ሎጊን ቼክ ካደረግክ ሰው ገና አፑን ሳያይ ይባረራል
+    // ስለዚህ ለጊዜው ቼኩን ዳሽቦርድ ላይ ብቻ አድርገው
 });
-
-// --- አዲስ የተጨመሩ የክፍያ ፈንክሽኖች ---
-
-// function openPaymentModal() {
-//     document.getElementById("paymentModal").style.display = "block";
-// }
-
-// function closeModal() {
-//     document.getElementById("paymentModal").style.display = "none";
-// }
-
-// async function processChapa(method) {
-//     const email = localStorage.getItem("loggedUser");
-//     const firstName = localStorage.getItem("loggedUserName") || "Customer";
-    
-//     try {
-//         const response = await fetch('/initialize-payment', {
-//             method: 'POST',
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify({
-//                 email: email,
-//                 amount: 100,
-//                 first_name: firstName,
-//                 service: "Tanker Monitor",
-//                 method: method 
-//             })
-//         });
-
-//         const data = await response.json();
-        
-//         if (data.checkout_url) {
-//             window.location.href = data.checkout_url;
-//         } else {
-//             alert("ክፍያ መጀመር አልተቻለም");
-//         }
-//     } catch (error) {
-//         console.error("Error:", error);
-//         // ሰርቨሩ Render ላይ ተኝቶ ከሆነ ወይም ግንኙነት ከሌለ ለሙከራ እንዲሰራ፦
-//         alert(method + " ክፍያ ተሳክቷል! ወደ ዳሽቦርድ እየወሰድንዎት ነው...");
-//         window.location.href = "index.html";
-//     }
-// }
-
-function processChapa(method) {
-    // 1. ለተጠቃሚው መመሪያ መስጠት
-    const message = `ውድ ደንበኛችን፣ ${method} መርጠዋል።\n\nእባክዎ 100 ብር ወደ +251937100547 በቴሌብር ይላኩ።\n\nብር መላክዎን የሚያረጋግጥ የደረሰኝ ፎቶ (Screenshot) በቴሌግራም @MollaDebew (ወይም በስልክ ቁጥራችን) ይላኩልን።\n\nአመሰግናለን!`;
-    
-    alert(message);
-    
-    // 2. ለጊዜው ክፍያውን እንደፈጸመ ቆጥሮ ወደ ዳሽቦርድ እንዲያልፍ ማድረግ
-    // ማሳሰቢያ፡ ለወደፊት በ Chapa ስታስተካክለው ይህ መስመር ይቀየራል
-    console.log(`${method} ክፍያ በሂደት ላይ ነው...`);
-    
-    setTimeout(() => {
-        window.location.href = "index.html"; 
-    }, 500);
-}

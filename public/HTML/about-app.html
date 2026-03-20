@@ -13,7 +13,7 @@
     <header class="main-header">
         <div class="logo">Smart Water Monitor</div>
         <nav>
-            <a href="index.html">Home</a>
+            <a href="about-app.html">Home</a>
             <a href="https://www.Ahadu_Tech_Academy.com" target="_blank" id="academy-btn" class="academy-btn">Ahadu Tech
                 Academy</a>
         </nav>
@@ -51,14 +51,14 @@
                             style="background:#222; width:300px; margin:100px auto; padding:20px; border-radius:15px; text-align:center; color:white; border:1px solid #007bff;">
                             <h4>የክፍያ ዘዴ ይምረጡ</h4>
                             <div style="display:grid; gap:10px; margin-top:20px;">
-                                <button onclick="processChapa('telebirr')"
+                                <button onclick="handlePayment('telebirr')"
                                     style="background:#00aae4; color:white; padding:10px; border:none; border-radius:5px; cursor:pointer;">Telebirr</button>
-                                <button onclick="processChapa('cbe')"
+                                <button onclick="handlePayment('cbe')"
                                     style="background:#7b2b8d; color:white; padding:10px; border:none; border-radius:5px; cursor:pointer;">CBE
                                     Birr</button>
-                                <button onclick="processChapa('abyssinia')"
+                                <button onclick="handlePayment('abyssinia')"
                                     style="background:#fdb913; color:black; padding:10px; border:none; border-radius:5px; cursor:pointer; font-weight:bold;">Abyssinia</button>
-                                <button onclick="processChapa('paypal')"
+                                <button onclick="handlePayment('paypal')"
                                     style="background:#003087; color:white; padding:10px; border:none; border-radius:5px; cursor:pointer;">PayPal</button>
                                 <button onclick="closeModal()"
                                     style="background:gray; color:white; padding:5px; margin-top:10px; border:none; border-radius:5px; cursor:pointer;">ተመለስ</button>
@@ -71,7 +71,7 @@
                         <h4>Tanker Amount Monitor</h4>
                         <p>የታንከርዎን የውሃ መጠን በማንኛውም ቦታ ሆነው ለመቆጣጠር።</p>
                         <span class="price">100 ETB</span>
-                        <button onclick="openPaymentModal()">አሁኑኑ ይክፈሉ</button>
+                        <button onclick="openPaymentModal('index.html')">አሁኑኑ ይክፈሉ</button>
                     </div>
 
                     <div class="service-card">
@@ -79,7 +79,7 @@
                         <h4>Water Quality</h4>
                         <p>የውሃውን ንጽህና፣ ፒኤች (pH) እና የባክቴሪያ መኖርን ለመለየት።</p>
                         <span class="price">250 ETB</span>
-                        <button onclick="openPaymentModal()">አሁኑኑ ይክፈሉ</button>
+                        <button onclick="openPaymentModal('water-quality.html')">አሁኑኑ ይክፈሉ</button>
                     </div>
 
                     <div class="service-card">
@@ -87,7 +87,7 @@
                         <h4>Irrigation Soil Moisture</h4>
                         <p>የአፈርን እርጥበት በመለካት ለመስኖ እርሻዎ ተገቢውን ውሃ በሰዓቱ ለመስጠት።</p>
                         <span class="price">300 ETB</span>
-                        <button onclick="openPaymentModal()">አሁኑኑ ይክፈሉ</button>
+                        <button onclick="openPaymentModal('soil-moisture.html')">አሁኑኑ ይክፈሉ</button>
                     </div>
                     <div class="service-card">
                         <i class="fas fa-water"></i>

@@ -1,0 +1,108 @@
+        :root {
+            --farm-green: #27ae60;
+            --accent-green: #2ecc71;
+            --water-blue: #2980b9;
+            --bg-color: #121212;
+            --nav-bg: #1a1a1a;
+            --card-bg: #1e1e1e;
+            --text-color: #f1f1f1;
+            --header-overlay: rgba(0,0,0,0.8);
+        }
+
+        body.light-mode {
+            --bg-color: #f4f7f6;
+            --nav-bg: #ffffff;
+            --card-bg: #ffffff;
+            --text-color: #1a1a1a;
+            --header-overlay: rgba(255,255,255,0.7);
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            transition: 0.3s ease;
+        }
+
+        .top-nav {
+            background: var(--nav-bg);
+            padding: 10px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid var(--farm-green);
+        }
+
+        .back-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .theme-controls { display: flex; gap: 10px; align-items: center; margin-right: 15px; }
+
+        .theme-btn {
+            border: 1px solid #555;
+            padding: 5px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .btn-dark { background: #000; color: #fff; }
+        .btn-light { background: #fff; color: #000; }
+
+        .soil-header {
+            background: linear-gradient(var(--header-overlay), var(--header-overlay)), 
+                        url('https://images.unsplash.com/photo-1622383529957-376ee75fd5a0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .soil-header h1 { font-size: 2.8rem; color: var(--farm-green); margin: 0; }
+        
+        /* h_def እንዲስተካከል የተደረገ ስታይል */
+        #header-def { 
+            font-size: 1.1rem; 
+            line-height: 1.6;
+            margin: 20px auto; 
+            max-width: 800px; 
+            color: var(--text-color);
+        }
+        
+        .soil-header p { font-size: 1.2rem; margin-top: 15px; max-width: 700px; margin-left: auto; margin-right: auto; }
+
+        .container { max-width: 1100px; margin: 20px auto 50px; padding: 20px; }
+
+        .plant-growth-container { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; }
+        .plant-box {
+            text-align: center; background: var(--card-bg);
+            padding: 20px; border-radius: 15px; border: 1px dashed var(--accent-green); flex: 1;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .plant-box img { width: 80px; animation: grow 3s infinite alternate; }
+        @keyframes grow { from { transform: scale(0.9); } to { transform: scale(1.1); } }
+
+        .moisture-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .data-card {
+            background: var(--card-bg); padding: 30px; border-radius: 20px;
+            text-align: center; border-top: 5px solid var(--farm-green);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .lang-btn {
+            background: var(--farm-green);
+            color: white; border: none; padding: 6px 12px;
+            cursor: pointer; border-radius: 4px;
+        }

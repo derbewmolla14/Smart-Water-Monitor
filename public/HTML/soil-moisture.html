@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="am">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Irrigation | Wollo University</title>
+    <link rel="stylesheet" href="soil-moisture.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+</head>
+<body id="main-body">
+
+    <nav class="top-nav">
+        <a href="about-app.html" class="back-link" id="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Services
+        </a>
+        
+        <div style="display: flex; align-items: center;">
+            <div class="theme-controls">
+                <button class="theme-btn btn-dark" onclick="toggleTheme('dark')">Dark</button>
+                <button class="theme-btn btn-light" onclick="toggleTheme('light')">Light</button>
+            </div>
+            
+            <div class="lang-container">
+                <button class="lang-btn" onclick="changeLang('am')">አማርኛ</button>
+                <button class="lang-btn" onclick="changeLang('en')">English</button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="soil-header">
+        <h1 id="header-title">Smart Irrigation System</h1>
+        <p id="header-def">ዘመናዊ የመስኖ ሥርዓት ማለት የላቁ ሴንሰሮችን (Sensors) በመጠቀም የአፈርን እርጥበት መጠን በቅጽበት (Real-time) በመለካት፣ ተክሎች የሚያስፈልጋቸውን ትክክለኛ የውሃ መጠን ብቻ በራሱ (Automatically) እንዲያገኙ የሚያደርግ ቴክኖሎጂ ነው። ይህም የውሃ ብክነትን ከመቀነሱም በላይ የሰብል ምርታማነትን በከፍተኛ ሁኔታ ይጨምራል።</p>
+        <p id="header-desc">የአፈርን እርጥበት በመለካት ውሃን በቁጠባ እና በብልሃት ለተክሎች ማቅረብ</p>
+    </header>
+
+    <div class="container">
+        <div class="plant-growth-container">
+            <div class="plant-box">
+                <img src="https://cdn-icons-png.flaticon.com/512/628/628283.png" alt="Smart">
+                <p id="plant-1">ዘመናዊ መስኖ</p>
+            </div>
+            <div class="plant-box">
+                <img src="https://cdn-icons-png.flaticon.com/512/1892/1892743.png" alt="Growth">
+                <p id="plant-2">የተክሎች እድገት</p>
+                <div id="pump-status" style="font-weight: bold; margin-top: 10px; color: #f1c40f;">ሁኔታ: በመፈተሽ ላይ...</div>
+            </div>
+        </div>
+
+        <div class="moisture-grid">
+            <div class="data-card">
+                <i class="fas fa-seedling" style="font-size: 2rem; color: var(--farm-green);"></i>
+                <h3 id="card1-title">የአፈር እርጥበት መጠን</h3>
+                <div id="moisture-val" style="font-size: 2.5rem; color: var(--water-blue); font-weight: bold; margin: 15px 0;">45%</div>
+                <p id="moisture-status">ሁኔታ፦ Normal</p>
+            </div>
+            <div class="data-card">
+                <i class="fas fa-faucet" style="font-size: 2rem; color: var(--water-blue);"></i>
+                <h3 id="card2-title">የፓምፕ ሁኔታ</h3>
+                <div style="margin: 20px 0;"><i class="fas fa-water" id="pump-icon" style="font-size: 3rem; color: #444;"></i></div>
+                <span id="pump-label" style="padding: 5px 15px; border-radius: 20px; background: #e74c3c; font-weight: bold; color: white;">OFF</span>
+            </div>
+        </div>
+    </div>
+    <script src="soil-moisture.js"></script>
+</body>
+</html>

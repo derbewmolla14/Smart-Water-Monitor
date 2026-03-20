@@ -75,7 +75,7 @@ body {
     text-decoration: none;
     margin-right: 50%;
     right: 0%;
-    height: 20px;
+    height: 40px;
     left: 0%;
     box-shadow: red 0 6px 4px;
 
@@ -83,7 +83,7 @@ body {
 .aheader2{
     background: yellow;
     right: 50%;
-    height: 20px;
+    height: 40px;
     left: 0%;
     box-shadow: white 0 6px 4px;
 
