@@ -111,7 +111,6 @@
     
 // });
 
-
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
@@ -124,11 +123,13 @@ const io = new Server(server, {
     cors: { origin: "*" }
 });
 
-// Middleware - ፋይሎችን ለብራውዘር ማቅረቢያ
+// --- 1. Static Files (CSS, JS, Images እንዲሰሩ) ---
+// ይህ መስመር ብራውዘሩ በ public ውስጥ ያሉትን CSS, JS እና images ፎልደሮች እንዲያገኝ ያደርጋል
 app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(express.json());
 
-// MongoDB Connection
+// --- 2. MongoDB Connection ---
 const dbURI = process.env.MONGO_URI || 'mongodb+srv://derbewmolla14:1998molla@cluster0.emoozsr.mongodb.net/WaterMonitorDB?retryWrites=true&w=majority';
 mongoose.connect(dbURI)
     .then(() => console.log('✅ MongoDB Connected!'))
@@ -139,23 +140,42 @@ const WaterLog = mongoose.model('WaterLog', new mongoose.Schema({
     timestamp: { type: Date, default: Date.now }
 }));
 
-// API Routes
+// --- 3. Routes (መንገዶች) ---
+
+// ዌብሳይቱ ሲከፈት (/) በቀጥታ HTML ፎልደር ውስጥ ያለውን login.html እንዲያሳይ
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'HTML', 'login.html'));
+});
+
+// ሌሎች የHTML ገጾችን ከ HTML ፎልደር ውስጥ በቀላሉ ለመጥራት
+// ለምሳሌ፡ your-site.com/about-app ብለህ ስትጽፍ about-app.html ይከፈታል
+app.get('/:page', (req, res) => {
+    const page = req.params.page;
+    const filePath = path.join(__dirname, 'public', 'HTML', page.endsWith('.html') ? page : `${page}.html`);
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            res.status(404).send("ገጹ አልተገኘም (Page not found)");
+        }
+    });
+});
+
+// አዳዲስ የውሃ መጠን መረጃዎችን ለመቀበል
 app.get('/update-level', async (req, res) => {
     const level = req.query.level;
-    if (!level) return res.status(400).send("Level required");
+    if (!level) return res.status(400).send("Level required. Use: /update-level?level=80");
     
-    // Real-time ለዳሽቦርዱ መረጃውን መላክ
     io.emit('levelUpdate', level);
 
     try {
         const newLog = new WaterLog({ level: Number(level) });
         await newLog.save();
-        res.send(`Updated: ${level}%`);
+        res.send(`Updated: ${level}% and saved to Database.`);
     } catch (error) {
-        res.status(500).send("DB Error");
+        res.status(500).send("Database Error");
     }
 });
 
+// የቆየ ዳታ ታሪክን ለማውጣት
 app.get('/get-history', async (req, res) => {
     try {
         const history = await WaterLog.find().sort({ timestamp: -1 }).limit(20);
@@ -165,6 +185,9 @@ app.get('/get-history', async (req, res) => {
     }
 });
 
-// Start Server
+// --- 4. Start Server ---
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+server.listen(PORT, () => {
+    console.log(`🚀 HydroOS Server is Live!`);
+    console.log(`🔗 Local Link: http://localhost:${PORT}`);
+});
