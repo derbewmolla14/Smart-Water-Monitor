@@ -1,21 +1,37 @@
-// --- 1. Global Variables ---
+// --- 1. Global Variables & Socket.io ---
 let otpCode; 
 let facebookOTP;
+const socket = io(); // Real-time ግንኙነት መፍጠር
 
-// --- 2. Security Check (በሁሉም ገጽ ላይ የሚሰራ) ---
+// --- 2. Security Check (ብራውዘር ላይ ብቻ የሚሰራ) ---
 document.addEventListener("DOMContentLoaded", () => {
     const currentPage = window.location.pathname;
     
-    // በ login እና register ገጽ ላይ ከሆንክ ቼክ ማድረግ አያስፈልግም
-    // ካልሆነ ግን ተጠቃሚው ካልገባ ወደ login.html ይመለሳል
-    if (!currentPage.includes("login.html") && !currentPage.includes("register.html") && currentPage !== "/") {
+    // ተጠቃሚው ሳይገባ ወደ ዳሽቦርድ ገጾች እንዳይገባ መከልከል
+    if (!currentPage.includes("login.html") && !currentPage.includes("register.html") && currentPage !== "/" && currentPage !== "/index.html") {
         if (localStorage.getItem("isLoggedIn") !== "true") {
             window.location.href = "login.html";
         }
     }
+    updateDateTime();
 });
 
-// --- 3. Registration (ምዝገባ) ---
+// --- 3. Real-time Dashboard Update ---
+socket.on('levelUpdate', (newLevel) => {
+    updateWaterLevel(newLevel);
+});
+
+function updateWaterLevel(percent) {
+    const waterElement = document.getElementById('water-level');
+    const percentText = document.getElementById('percent-val');
+    const volumeText = document.getElementById('volume-val');
+    
+    if (waterElement) waterElement.style.height = percent + "%";
+    if (percentText) percentText.innerText = percent + "%";
+    if (volumeText) volumeText.innerText = (percent / 100) * 1000; // 1000L ታንከር
+}
+
+// --- 4. Registration (ምዝገባ) ---
 function sendCode() {
     otpCode = Math.floor(1000 + Math.random() * 9000);
     alert("የምዝገባ ማረጋገጫ ኮድ (OTP): " + otpCode);
@@ -48,7 +64,7 @@ function register() {
     window.location.href = "login.html";
 }
 
-// --- 4. Login (መግቢያ) ---
+// --- 5. Login (መግቢያ) ---
 function login() {
     let email = document.getElementById("loginEmail").value;
     let password = document.getElementById("loginPassword").value;
@@ -69,7 +85,7 @@ function login() {
     }
 }
 
-// --- 5. Password Reset (የይለፍ ቃል መቀየሪያ) ---
+// --- 6. Password Reset (የይለፍ ቃል መቀየሪያ) ---
 function sendFacebookStyleCode() {
     let emailInput = document.getElementById("email2").value;
     let phoneInput = document.getElementById("phone").value;
@@ -114,7 +130,7 @@ function finishReset() {
     }
 }
 
-// --- 6. Utilities ---
+// --- 7. Utilities ---
 function updateDateTime() {
     const dateTimeEl = document.getElementById('date-time');
     if (dateTimeEl) {

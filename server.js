@@ -1,18 +1,4 @@
-// Login በተኑ ሲነካ የሚሰራ ፋንክሽን
-function loginUser() {
-    // እዚህ ጋር የፓስወርድ ቼክ ማድረግ ትችላለህ
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
 
-    if (username === "admin" && password === "1234") { // ለምሳሌ
-        // በኮምፒውተሩ ላይ መግባቱን መመዝገብ
-        localStorage.setItem("isLoggedIn", "true");
-        // ወደ ቀጣዩ ገጽ መላክ
-        window.location.href = "about-app.html";
-    } else {
-        alert("ስህተት! እባክዎ ትክክለኛ መረጃ ያስገቡ።");
-    }
-}
 // // 1. ሰዓት እና ቀን በየሰከንዱ እንዲታደስ የሚያደርግ ፈንክሽን
 // function updateDateTime() {
 //     const now = new Date();
@@ -126,55 +112,59 @@ function loginUser() {
 // });
 
 
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+const path = require('path');
+const mongoose = require('mongoose');
 
-// ተጠቃሚው Login ማድረጉን ቼክ ማድረግ
-const loggedUser = localStorage.getItem("isLoggedIn");
-
-if (!loggedUser) {
-    // Login ካላደረገ ወደ login.html መልሰው
-    window.location.href = "login.html";
-}
-const socket = io();
-
-// 1. ሰዓት እና ቀን አድስ
-function updateDateTime() {
-    const now = new Date();
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-    const dtElement = document.getElementById('date-time');
-    if (dtElement) dtElement.innerText = now.toLocaleDateString('en-US', options);
-}
-setInterval(updateDateTime, 1000);
-
-// 2. የውሃ መጠን ግራፊክስ መቀየሪያ
-function updateWaterLevel(percent) {
-    percent = Math.max(0, Math.min(100, percent));
-
-    const waterElement = document.getElementById('water-level');
-    const percentText = document.getElementById('percent-val');
-    const volumeText = document.getElementById('volume-val');
-
-    if (waterElement) waterElement.style.height = percent + "%";
-    if (percentText) percentText.innerText = percent;
-    if (volumeText) volumeText.innerText = (percent / 100) * 1000; // 1000L tank
-}
-
-// 3. Socket.io መረጃ ሲመጣ
-socket.on('levelUpdate', (newLevel) => {
-    updateWaterLevel(newLevel);
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: { origin: "*" }
 });
 
-// 4. Login Check
-document.addEventListener("DOMContentLoaded", () => {
-    if (localStorage.getItem("isLoggedIn") !== "true") {
-        window.location.href = "login.html";
+// Middleware - ፋይሎችን ለብራውዘር ማቅረቢያ
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+
+// MongoDB Connection
+const dbURI = process.env.MONGO_URI || 'mongodb+srv://derbewmolla14:1998molla@cluster0.emoozsr.mongodb.net/WaterMonitorDB?retryWrites=true&w=majority';
+mongoose.connect(dbURI)
+    .then(() => console.log('✅ MongoDB Connected!'))
+    .catch(err => console.error('❌ DB Error:', err));
+
+const WaterLog = mongoose.model('WaterLog', new mongoose.Schema({
+    level: Number,
+    timestamp: { type: Date, default: Date.now }
+}));
+
+// API Routes
+app.get('/update-level', async (req, res) => {
+    const level = req.query.level;
+    if (!level) return res.status(400).send("Level required");
+    
+    // Real-time ለዳሽቦርዱ መረጃውን መላክ
+    io.emit('levelUpdate', level);
+
+    try {
+        const newLog = new WaterLog({ level: Number(level) });
+        await newLog.save();
+        res.send(`Updated: ${level}%`);
+    } catch (error) {
+        res.status(500).send("DB Error");
     }
-    updateDateTime();
 });
 
-
-// script.js
-socket = io("https://smart-water-monitor-7kui.onrender.com"); 
-
-socket.on("connect", () => {
-    console.log("Connected to Server!");
+app.get('/get-history', async (req, res) => {
+    try {
+        const history = await WaterLog.find().sort({ timestamp: -1 }).limit(20);
+        res.json(history);
+    } catch (error) {
+        res.status(500).send("Error fetching history");
+    }
 });
+
+// Start Server
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
