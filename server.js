@@ -162,29 +162,33 @@ if (!fs.existsSync(uploadDir)){
 }
 
 
-// ሁሉንም ደረሰኞች ለይቶ የሚያወጣ API
+
 app.get('/admin/receipts', (req, res) => {
-    const directoryPath = './public/uploads/receipts';
+    // የፎልደሩን ትክክለኛ መገኛ በሰርቨሩ ላይ መፈለግ
+    const directoryPath = path.join(__dirname, 'public/uploads/receipts');
     
+    if (!fs.existsSync(directoryPath)){
+        return res.json([]); 
+    }
+
     fs.readdir(directoryPath, (err, files) => {
         if (err) {
-            return res.status(500).send({ message: "ፋይሎቹን ማግኘት አልተቻለም" });
+            return res.status(500).json({ message: "ፋይሎችን ማንበብ አልተቻለም" });
         }
         
-        // የፋይሎቹን ዝርዝር ወደ Frontend መላክ
+        // ፋይሎቹን ለFrontend በሚመች መልኩ ማዘጋጀት
         const fileList = files.map(file => ({
             name: file,
-            url: `/uploads/receipts/${file}`
+            url: `/uploads/receipts/${file}` // በ static('public') በኩል የሚገኝበት መንገድ
         }));
         res.json(fileList);
     });
 });
 
-
 // አድሚን መግቢያ (Login) API
 app.post('/admin/login', (req, res) => {
     const { password } = req.body;
-    const ADMIN_PASSWORD = "your_secret_password"; // እዚህ ጋር የፈለግኸውን ሚስጥራዊ ቃል ቀይር
+    const ADMIN_PASSWORD = "molla1998"; // እዚህ ጋር የፈለግኸውን ሚስጥራዊ ቃል ቀይር
 
     if (password === ADMIN_PASSWORD) {
         res.json({ success: true, message: "እንኳን ደህና መጡ!" });

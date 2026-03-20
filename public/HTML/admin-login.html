@@ -20,23 +20,33 @@
     </div>
 
     <script>
-        async function checkAdmin() {
-            const password = document.getElementById('adminPass').value;
-            const response = await fetch('/admin/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password })
-            });
+   async function checkAdmin() {
+    const password = document.getElementById('adminPass').value;
+    
+    try {
+        const response = await fetch('/admin/login', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json' 
+            },
+            body: JSON.stringify({ password: password })
+        });
 
-            const result = await response.json();
-            if (result.success) {
-                // ለጊዜው በ SessionStorage አድሚን መሆኑን እንመዘግባለን
-                sessionStorage.setItem('isAdmin', 'true');
-                window.location.href = 'admin-dashboard.html';
-            } else {
-                alert(result.message);
-            }
+        const result = await response.json();
+
+        if (result.success) {
+            // መግባት መቻሉን በ SessionStorage መመዝገብ
+            sessionStorage.setItem('isAdmin', 'true');
+            // ቀጥታ ወደ ዳሽቦርዱ መውሰድ
+            window.location.href = 'admin-dashboard.html';
+        } else {
+            alert(result.message || "መግባት አልተቻለም!");
         }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("ከሰርቨር ጋር መገናኘት አልተቻለም!");
+    }
+}
     </script>
 </body>
 </html>
