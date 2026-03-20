@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html lang="am">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Water Monitor</title>
-    <link rel="stylesheet" href="CSS/style.css">
+    <link rel="stylesheet" href="/CSS/style.css">
 </head>
-
 <body>
     <div class="field">
         <div class="header">
-        <a href="about-app.html" class="about-btn  aheader1">HOME</a>
-        <a href="about-developer.html" class="dev-btn  aheader2">About developer</a>
+            <button id="lang-toggle" onclick="toggleLanguage()" class="lang-btn">አማርኛ / English</button>
+            <a href="/HTML/about-app.html" class="about-btn aheader1" data-en="HOME" data-am="ቤት">HOME</a>
+            <a href="/HTML/about-developer.html" class="dev-btn aheader2" data-en="About developer" data-am="ስለ አበልጻጊው">About developer</a>
         </div>
+        
         <div class="container">
             <header>
-                <h1>Smart Water Monitor 💧</h1>
+                <h1 data-en="Smart Water Monitor 💧" data-am="ብልህ የውሃ ተቆጣጣሪ 💧">Smart Water Monitor 💧</h1>
                 <p id="date-time"></p>
                 <div style="margin-top: 20px;">
-                    <a href="/download-excel" class="download-btn">
-                        የExcel ሪፖርት አውርድ (Download Excel) 📥
+                    <a href="/download-excel" class="download-btn" data-en="Download Excel Report 📥" data-am="የExcel ሪፖርት አውርድ 📥">
+                        Download Excel Report (የExcel ሪፖርት አውርድ) 📥
                     </a>
                 </div>
             </header>
@@ -35,52 +35,42 @@
 
                 <div class="stats-grid">
                     <div class="card">
-                        <h3>ሁኔታ (Status)</h3>
-                        <p class="status-online">Online</p>
+                        <h3 data-en="Status" data-am="ሁኔታ">Status (ሁኔታ)</h3>
+                        <p class="status-online" data-en="Online" data-am="ኦንላይን">Online</p>
                     </div>
                     <div class="card">
-                        <h3>መጠን (Volume)</h3>
-                        <p><span id="volume-val">650</span> ሊትር</p>
+                        <h3 data-en="Volume" data-am="መጠን">Volume (መጠን)</h3>
+                        <p><span id="volume-val">650</span> <span data-en="Liters" data-am="ሊትር">Liters</span></p>
                     </div>
                     <div class="card">
-                        <h3>ሙቀት (Temp)</h3>
+                        <h3 data-en="Temperature" data-am="ሙቀት">Temperature (ሙቀት)</h3>
                         <p><span>24</span>°C</p>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="/JS/general.js"></script>
+    <script src="/JS/script.js"></script>
 
-<script src="JS/general.js"></script>
-<script>
-    // 1. መጀመሪያ Security Check
-    (function() {
-        if (localStorage.getItem("isLoggedIn") !== "true") {
-            window.location.href = "login.html";
-        } else {
-            console.log("Welcome " + localStorage.getItem("loggedUserName"));
-        }
-    })();
+    <script>
+        // Security Check
+        (function() {
+            if (localStorage.getItem("isLoggedIn") !== "true") {
+                window.location.href = "/HTML/login.html";
+            }
+        })();
 
-    // 2. Socket.io ግንኙነት (አድራሻህን ተጠቀም)
-    const socket = io("https://smart-water-monitor-7kui.onrender.com");
+        // Socket Connection
+        const socket = io("https://smart-water-monitor-7kui.onrender.com");
 
-    socket.on('levelUpdate', (newLevel) => {
-        updateWaterLevel(newLevel);
-    });
-
-    // Logout ተግባር
-    function logout() {
-        localStorage.removeItem("isLoggedIn");
-        window.location.href = "login.html";
-    }
-</script>
-    <script src="JS/script.js"></script>
-   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+        socket.on('levelUpdate', (newLevel) => {
+            if (typeof updateWaterLevel === 'function') {
+                updateWaterLevel(newLevel);
+            }
+        });
+    </script>
 </body>
-
 </html>
-<!-- npm init -y -->
-<!-- npm install express socket.io -->
