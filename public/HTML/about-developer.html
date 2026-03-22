@@ -5,9 +5,108 @@
     <meta charset="UTF-8">
     <title>About Developer</title>
     <link rel="stylesheet" href="/CSS/style.css">
+    <style>
+        /* --- Header & Navigation Setup --- */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #2f8f88;
+    color: white;
+    display: flex;
+    justify-content: space-between; /* Logo በግራ፣ ሊንኮች በቀኝ */
+    align-items: center;
+    padding: 10px 40px; /* በጎን በኩል ትንሽ ክፍተት እንዲኖር */
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    gap: 20px; /* በእያንዳንዱ ሊንክ መካከል። ክፍተት እንዲኖር */
+}
+
+.nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.nav-links li a:hover {
+    color: #f39c12;
+}
+
+/* --- Buttons in Header --- */
+.admin-nav-btn {
+    background-color: #f39c12; 
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.admin-nav-btn:hover {
+    background-color: #e67e22;
+    transform: translateY(-2px); /* ሲነካ ትንሽ ከፍ እንዲል */
+}
+
+.logout-btn {
+    background-color: #db4437; /* ለLogout ቀይ ቀለም ቢሆን ይመረጣል */
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #c1352a;
+}
+
+/* --- Logo Styling --- */
+.logo {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+/* --- Body Adjustment --- */
+body {
+    background-image: url(/images/images/image/images/good\ wallpaper.jpg);
+    background-size: cover;
+    background-attachment: fixed;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding-top: 80px; /* Header ገጹን እንዳይሸፍነው */
+}
+    </style>
 </head>
 
 <body>
+
+    <header class="header">
+    <nav class="gap-2">
+        <div class="logo">HydroOS</div>
+        <ul class="nav-links">
+            <li><a href="about-app.html">Home</a></li>
+            <li><button onclick="goToAdmin()" class="admin-nav-btn">Admin</button></li>
+            <li><button onclick="logout()" class="logout-btn">Logout</button></li>
+        </ul>
+    </nav>
+</header>
     <div class="container" style="text-align: center;">
         <div class="lang-switch">
             <button onclick="changeLang('am')">አማርኛ</button>

@@ -40,7 +40,11 @@
             const data = await response.json();
 
             if (response.ok && data.success) {
-                // በሰርቨሩ Route መሰረት ወደ ዳሽቦርድ ይሄዳል
+                // 🔴 ዋናው መስመር ይህ ነው! 
+            // አድሚኑ መግባቱን ለብሮውዘሩ መንገር አለብህ
+            localStorage.setItem("isAdminLoggedIn", "true"); 
+
+            alert("እንኳን ደህና መጡ"+ username+"!");
                 window.location.href = '/admin-dashboard';
             } else {
                 alert(data.message || "የይለፍ ቃል ስህተት ነው!");
@@ -50,6 +54,10 @@
             alert("ከሰርቨር ጋር መገናኘት አልተቻለም!");
         }
     }
+    function adminLogout() {
+    localStorage.removeItem("isAdminLoggedIn");
+    window.location.href = "/admin-login";
+}
 </script>
 </body>
 </html>

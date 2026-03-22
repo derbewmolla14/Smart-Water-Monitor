@@ -162,9 +162,6 @@ app.get('/login.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'HTML', 'login.html'));
 });
 // ለጥንቃቄ ደግሞ ያለ .html እንዲሰራ ይህን ይጨምሩ
-app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'HTML', 'login.html'));
-});
 // --- 4. Start Server (ሁልጊዜ ከሁሉም በታች መጨረሻ ላይ) ---
 const PORT = 3000;
 server.listen(PORT, () => {
