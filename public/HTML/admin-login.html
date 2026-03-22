@@ -22,8 +22,8 @@
 
    <script>
     async function checkAdmin() {
-        // የ input ID-ው 'adminPass' መሆኑን አረጋግጥ
-        const passwordValue = document.getElementById('adminPass').value;
+        const passwordInput = document.getElementById('adminPass');
+        const passwordValue = passwordInput.value;
 
         if (!passwordValue) {
             alert("እባክዎ መጀመሪያ የይለፍ ቃል ያስገቡ!");
@@ -31,33 +31,35 @@
         }
 
         try {
-            const response = await fetch('/admin/login', {
+            // የ fetch አድራሻውን ሙሉ በሙሉ ለማግኘት እንዲህ ተጠቀም
+            const response = await fetch(`${window.location.origin}/admin/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password: passwordValue }) // በትክክል ተልኳል
+                body: JSON.stringify({ password: passwordValue })
             });
 
             const data = await response.json();
 
             if (response.ok && data.success) {
-                // 🔴 ዋናው መስመር ይህ ነው! 
-            // አድሚኑ መግባቱን ለብሮውዘሩ መንገር አለብህ
-            localStorage.setItem("isAdminLoggedIn", "true"); 
-
-            alert("እንኳን ደህና መጡ"+ username+"!");
+                // መግባቱን ማረጋገጫ ሴቭ እናደርጋለን
+                localStorage.setItem("isAdminLoggedIn", "true"); 
+            // username ስላልተበየነ ቀለል ባለ መልዕክት እንተካው
+                alert("እንኳን ደህና መጡ አድሚን!");
                 window.location.href = '/admin-dashboard';
             } else {
                 alert(data.message || "የይለፍ ቃል ስህተት ነው!");
             }
         } catch (err) {
             console.error("የመጣው ስህተት፦", err);
-            alert("ከሰርቨር ጋር መገናኘት አልተቻለም!");
+            // እዚህ ጋር ነው ስህተቱ የሚመጣው - ሰርቨሩ መብራቱን አረጋግጥ
+            alert("ከሰርቨር ጋር መገናኘት አልተቻለም! እባክዎ ኢንተርኔትዎን ወይም የሰርቨሩን ሁኔታ ያረጋግጡ።");
         }
     }
+
     function adminLogout() {
-    localStorage.removeItem("isAdminLoggedIn");
-    window.location.href = "/admin-login";
-}
+        localStorage.removeItem("isAdminLoggedIn");
+        window.location.href = "/admin-login";
+    }
 </script>
 </body>
 </html>

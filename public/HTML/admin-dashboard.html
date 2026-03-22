@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <title>Admin - Receipt Manager</title>
     <link rel="stylesheet" href="/CSS/about.css">
-    <link rel="icon" href="data:;base64,iVBORw0KGgoAAAAN some-random-text">
-    <!-- <link rel="icon" type="image/png" href="/images/logo.png"> -->
+    <link rel="icon" href="data:;base64,iVBORw0KGgoAAAAN">
     <style>
         .admin-grid {
             display: grid;
@@ -62,102 +61,100 @@
     <header class="main-header">
         <div class="logo">Admin Dashboard</div>
         <a href="about-app.html" style="color: white; text-decoration: none;">Go to HOME</a>
+        <button onclick="adminLogout()" style="margin-left:20px; cursor:pointer;">Logout</button>
     </header>
 
     <div class="container">
         <h2>የደረሱ የክፍያ ደረሰኞች</h2>
         <div id="receiptsContainer" class="admin-grid">
-        </div>
+            </div>
     </div>
 
-
     <script src="/socket.io/socket.io.js"></script>
-  <script>
-    async function loadReceipts() {
-        const container = document.getElementById('receiptsContainer');
-        try {
-            const response = await fetch('/admin/receipts');
-            const receipts = await response.json();
+    <script>
+        // 1. የደህንነት ፍተሻ - አድሚን ካልሆነ ወዲያውኑ ያስወጣዋል
+        if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+            window.location.href = "admin-login.html";
+        }
 
-            if (!receipts || receipts.length === 0) {
-                container.innerHTML = "<p style='text-align:center; width:100%;'>እስካሁን ምንም የተላከ የደረሰኝ ምስል የለም።</p>";
-                return;
-            }
+        async function loadReceipts() {
+            const container = document.getElementById('receiptsContainer');
+            try {
+                const response = await fetch('/admin/receipts');
+                const receipts = await response.json();
 
-            container.innerHTML = "";
-            receipts.forEach(receipt => {
-                const card = `
-                    <div class="receipt-card">
-                        <img src="${receipt.url}" alt="Receipt" onclick="window.open(this.src)">
-                        <p><strong>ተጠቃሚ:</strong> ${receipt.username}</p>
-                        <p><strong>አገልግሎት:</strong> ${receipt.serviceName}</p>
-                        <div class="btn-group">
-                            <button class="approve" onclick="approvePayment('${receipt._id}', '${receipt.username}', '${receipt.serviceName}')">አጽድቅ</button>
-                            <button class="reject" onclick="rejectPayment('${receipt.serviceName}', '${receipt.username}')">ውድቅ አድርግ</button>
+                if (!receipts || receipts.length === 0) {
+                    container.innerHTML = "<p style='text-align:center; width:100%;'>እስካሁን ምንም የተላከ የደረሰኝ ምስል የለም።</p>";
+                    return;
+                }
+
+                container.innerHTML = "";
+                receipts.forEach(receipt => {
+                    // ለቼክ እንዲመች በኮንሶል ማሳያ
+                    console.log("Image Path:", receipt.url);
+                    
+                    const card = `
+                        <div class="receipt-card">
+                            <img src="${receipt.url}" alt="Receipt" onclick="window.open(this.src)">
+                            <p><strong>ተጠቃሚ:</strong> ${receipt.username}</p>
+                            <p><strong>አገልግሎት:</strong> ${receipt.serviceName}</p>
+                            <div class="btn-group">
+                                <button class="approve" onclick="approvePayment('${receipt._id}', '${receipt.username}', '${receipt.serviceName}')">አጽድቅ</button>
+                                <button class="reject" onclick="rejectPayment('${receipt.serviceName}', '${receipt.username}')">ውድቅ አድርግ</button>
+                            </div>
                         </div>
-                    </div>
-                `;
-                container.innerHTML += card;
-            });
-        } catch (error) {
-            console.error("ምስሎችን መጫን አልተቻለም:", error);
-            container.innerHTML = "<p>መረጃውን መጫን አልተቻለም። ሰርቨሩ መብራቱን አረጋግጥ።</p>";
-        }
-    }
- window.onload = loadReceipts;
-    // ማጽደቂያ
-    async function approvePayment(id, username, serviceName) {
-        if(!confirm(serviceName + " ክፍያ ይጽደቅ?")) return;
-
-        try {
-            const response = await fetch('/admin/approve-payment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id, username, serviceName })
-            });
-
-            const result = await response.json();
-            if (result.success) {
-                alert("ክፍያው ጸድቋል! ተጠቃሚው 'Open' በተን ያገኛል።");
-                location.reload();
+                    `;
+                    container.innerHTML += card;
+                });
+            } catch (error) {
+                console.error("ምስሎችን መጫን አልተቻለም:", error);
+                container.innerHTML = "<p>መረጃውን መጫን አልተቻለም። ሰርቨሩ መብራቱን አረጋግጥ።</p>";
             }
-        } catch (error) {
-            alert("ማጽደቅ አልተቻለም።");
         }
-    }
 
-    // ውድቅ ማድረጊያ (ቀደም ብለን የሰራነው)
-    async function rejectPayment(serviceName, username) {
-    const reason = prompt("ለምን ውድቅ ተደረገ? (ለምሳሌ፡ ምስሉ አይነበብም)");
-    if (!reason) return; // cancel ከተባለ ይቁም
-
-    try {
-        const response = await fetch('/admin/reject-payment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ serviceName, username, reason })
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            alert("ለተጠቃሚው የውድቅ መልዕክት ተልኳል!");
-            location.reload(); // ገጹን አድስ
+        async function approvePayment(id, username, serviceName) {
+            if(!confirm(serviceName + " ክፍያ ይጽደቅ?")) return;
+            try {
+                const response = await fetch('/admin/approve-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, username, serviceName })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert("ክፍያው ጸድቋል!");
+                    location.reload();
+                }
+            } catch (error) {
+                alert("ማጽደቅ አልተቻለም።");
+            }
         }
-    } catch (error) {
-        console.error("Error:", error);
-        alert("ማስተናገድ አልተቻለም!");
-    }
-}
 
-// በ receipts.forEach ውስጥ ያለውን ምስል እንዲህ ቀይረው
-document.addEventListener("DOMContentLoaded", () => {
-    if (localStorage.getItem("isAdminLoggedIn") !== "true") {
-        window.location.href = "admin-login.html";
-    }
-});
-// በአድሚን JS ውስጥ
-console.log("Image Path:", receipt.url);
-</script>
+        async function rejectPayment(serviceName, username) {
+            const reason = prompt("ለምን ውድቅ ተደረገ? (ለምሳሌ፡ ምስሉ አይነበብም)");
+            if (!reason) return;
+            try {
+                const response = await fetch('/admin/reject-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ serviceName, username, reason })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert("ለተጠቃሚው የውድቅ መልዕክት ተልኳል!");
+                    location.reload();
+                }
+            } catch (error) {
+                alert("ማስተናገድ አልተቻለም!");
+            }
+        }
+
+        function adminLogout() {
+            localStorage.removeItem("isAdminLoggedIn");
+            window.location.href = "admin-login.html";
+        }
+
+        window.onload = loadReceipts;
+    </script>
 </body>
-
 </html>
