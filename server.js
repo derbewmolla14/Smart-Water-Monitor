@@ -17,15 +17,15 @@ const io = new Server(server, {
 
 // --- 1. Cloudinary Setup (አዲሱ ቁልፍህ ገብቷል) ---
 cloudinary.config({
-  cloud_name: 'hydroos', 
+  cloud_name: 'hydroOS', 
   api_key: '761546784993472',
-  api_secret: '2ky_jDRbmxKsagkX7cL1WtdJ37M' 
+  api_secret:'2ky_jDRbmxKsagkX7cL1WtdJ37M' 
 });
 
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'hydroos_receipts',
+    folder: 'hydroOS_receipts',
     allowed_formats: ['jpg', 'png', 'jpeg'],
   },
 });

@@ -172,15 +172,25 @@ async function uploadReceipt(event) {
     formData.append('username', username);
 
     try {
-        const response = await fetch('/submit-payment', { method: 'POST', body: formData });
+        // 🔴 ይህን መስመር እንዲህ አስተካክለው
+        const response = await fetch(`${window.location.origin}/submit-payment`, { 
+            method: 'POST', 
+            body: formData 
+        });
+
         const data = await response.json();
         if (data.success) {
             alert("ደረሰኙ በትክክል ተልኳል። አድሚኑ እስኪያጸድቅ ይጠብቁ።");
             document.getElementById("paymentModal").style.display = "none";
+        } else {
+            // ሰርቨሩ ስህተት ሲመልስ ምን እንደሆነ ለማወቅ
+            alert("ስህተት፦ " + (data.error || "መላክ አልተቻለም"));
         }
-    } catch (err) { alert("መላክ አልተቻለም!"); }
+    } catch (err) { 
+        console.error("Fetch Error:", err);
+        alert("ከሰርቨር ጋር መገናኘት አልተቻለም!"); 
+    }
 }
-
 // ==========================================
 // 5. ገጹ ሲከፈት የሚሰሩ ስራዎች
 // ==========================================
