@@ -12,13 +12,19 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@cloudinary/react": "^1.14.4",
+    "@cloudinary/url-gen": "^1.22.0",
     "axios": "^1.13.6",
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^1.41.3",
+    "dotenv": "^17.3.1",
     "exceljs": "^4.4.0",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.3.0",
     "multer": "^2.1.1",
+    "multer-storage-cloudinary": "^4.0.0",
+    "next-cloudinary": "^6.17.5",
     "node-cron": "^4.2.1",
     "socket.io": "^4.8.3"
   }
