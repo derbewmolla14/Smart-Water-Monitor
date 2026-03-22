@@ -146,7 +146,10 @@ socket.on('paymentRejected', (data) => {
         alert(`⚠️ ማሳሰቢያ፦ የ ${data.serviceName} ክፍያዎ ውድቅ ተደርጓል። \nምክንያት፦ ${data.reason}`);
     }
 });
-
+// ተጠቃሚው ካልገባ ወደ login.html ይመልሰዋል
+if (localStorage.getItem("isLoggedIn") !== "true") {
+    window.location.href = "login.html";
+}
 // ==========================================
 // 4. ክፍያ የመላክ ስራ (Upload)
 // ==========================================

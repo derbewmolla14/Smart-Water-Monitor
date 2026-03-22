@@ -4,18 +4,27 @@ let facebookOTP;
 const socket = io(); // Real-time ግንኙነት መፍጠር
 
 // --- 2. Security Check (ብራውዘር ላይ ብቻ የሚሰራ) ---
+// --- Security Check ---
 document.addEventListener("DOMContentLoaded", () => {
     const currentPage = window.location.pathname;
-    
-    // ተጠቃሚው ሳይገባ ወደ ዳሽቦርድ ገጾች እንዳይገባ መከልከል
-    if (!currentPage.includes("login.html") && !currentPage.includes("register.html") && currentPage !== "/" && currentPage !== "/index.html") {
-        if (localStorage.getItem("isLoggedIn") !== "true") {
-            window.location.href = "login.html";
-        }
-    }
-    updateDateTime();
-});
+    const isLoggedIn = localStorage.getItem("isLoggedIn");
 
+    // 1. ተጠቃሚው ገብቶ ከሆነና ወደ login/register መሄድ ከፈለገ ወደ dashboard ይመልሰው
+    if ((currentPage.includes("login.html") || currentPage === "/") && isLoggedIn === "true") {
+        window.location.href = "about-app.html";
+        return;
+    }
+
+    // 2. ተጠቃሚው ሳይገባ ወደ dashboard ገጾች መሄድ ከፈለገ ወደ login ይመልሰው
+    const privatePages = ["about-app.html", "index.html", "soil-moisture.html"]; // ጥበቃ የሚደረላቸው ገጾች
+    const isPrivatePage = privatePages.some(page => currentPage.includes(page));
+
+    if (isPrivatePage && isLoggedIn !== "true") {
+        window.location.href = "login.html";
+    }
+    
+    if (typeof updateDateTime === "function") updateDateTime();
+});
 // --- 3. Real-time Dashboard Update ---
 socket.on('levelUpdate', (newLevel) => {
     updateWaterLevel(newLevel);
@@ -40,7 +49,7 @@ function sendCode() {
 function register() {
     let email = document.getElementById("email").value;
     let otp = document.getElementById("otp").value;
-
+    let phone = document.getElementById("phone").value; // ስልክ ቁጥሩን እዚህ መያዝህን እርግጠኛ ሁን
     if (otp != otpCode) {
         alert("የገቡት OTP ስህተት ነው!");
         return;
@@ -56,7 +65,7 @@ function register() {
         lastname: document.getElementById("lastname").value,
         password: document.getElementById("password").value,
         email: email,
-        phone: document.getElementById("phone").value
+        phone:phone
     };
 
     localStorage.setItem(email, JSON.stringify(user));
@@ -73,18 +82,28 @@ function login() {
     if (userData) {
         let user = JSON.parse(userData);
         if (user.password === password) {
+            // መረጃዎቹን በትክክል መመዝገብ
             localStorage.setItem("isLoggedIn", "true");
-            localStorage.setItem("loggedUser", email);
+            localStorage.setItem("userEmail", email); // ለደረሰኝ መላኪያ ይጠቅማል
             localStorage.setItem("loggedUserName", user.firstname);
+            
+            alert("እንኳን ደህና መጡ " + user.firstname + "!");
             window.location.href = "about-app.html"; 
         } else {
             alert("የይለፍ ቃል ስህተት ነው!");
         }
     } else {
-        alert("ተጠቃሚው አልተገኘም! እባክዎ ይመዝገቡ።");
+        alert("ተጠቃሚው አልተገኘም!");
     }
 }
+// app.get('/login.html', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'HTML', 'login.html'));
+// });
 
+// // ለጥንቃቄ ደግሞ ያለ .html እንዲሰራ ይህን ይጨምሩ
+// app.get('/login', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'public', 'HTML', 'login.html'));
+// });
 // --- 6. Password Reset (የይለፍ ቃል መቀየሪያ) ---
 function sendFacebookStyleCode() {
     let emailInput = document.getElementById("email2").value;

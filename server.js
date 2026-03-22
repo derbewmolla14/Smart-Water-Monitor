@@ -117,8 +117,9 @@ app.post('/admin/reject-payment', async (req, res) => {
 
 // ገጾችን መጥሪያ (ሁልጊዜ ከ API-ዎቹ በታች መሆን አለበት)
 // // ዋናው ገጽ (Home Page) ሲከፈት about-app እንዲመጣ
+// server.js ውስጥ መኖሩን አረጋግጥ
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'HTML', 'about-app.html'));
+    res.sendFile(path.join(__dirname, 'public', 'HTML', 'login.html'));
 });
 // ከዳታቤዝ ሁሉንም ደረሰኞች አምጥቶ ለአድሚን መላክ
 app.get('/admin/receipts', async (req, res) => {
@@ -152,7 +153,13 @@ app.get('/:page', (req, res) => {
         res.status(404).send("ገጹ አልተገኘም (404 Not Found)");
     }
 });
-
+app.get('/login.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'HTML', 'login.html'));
+});
+// ለጥንቃቄ ደግሞ ያለ .html እንዲሰራ ይህን ይጨምሩ
+app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'HTML', 'login.html'));
+});
 // --- 4. Start Server (ሁልጊዜ ከሁሉም በታች መጨረሻ ላይ) ---
 const PORT = 3000;
 server.listen(PORT, () => {
