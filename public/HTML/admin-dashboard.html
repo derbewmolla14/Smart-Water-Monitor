@@ -1,60 +1,130 @@
 <!DOCTYPE html>
 <html lang="am">
+
 <head>
     <meta charset="UTF-8">
     <title>Admin - Receipt Manager</title>
     <link rel="stylesheet" href="/CSS/about.css">
+    <link rel="icon" href="data:;base64,iVBORw0KGgoAAAAN some-random-text">
+    <!-- <link rel="icon" type="image/png" href="/images/logo.png"> -->
     <style>
-        .admin-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; padding: 20px; }
-        .receipt-card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); text-align: center; }
-        .receipt-card img { width: 100%; height: 200px; object-fit: cover; border-radius: 5px; cursor: pointer; }
-        .btn-group { margin-top: 15px; display: flex; gap: 10px; justify-content: center; }
-        .approve { background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
-        .reject { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .receipt-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .receipt-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-group {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .approve {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .reject {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
+
 <body style="background: #f0f2f5;">
     <header class="main-header">
         <div class="logo">Admin Dashboard</div>
-        <a href="about-app.html" style="color: white; text-decoration: none;">ወደ ዋናው ገጽ ተመለስ</a>
+        <a href="about-app.html" style="color: white; text-decoration: none;">Go to HOME</a>
     </header>
 
     <div class="container">
         <h2>የደረሱ የክፍያ ደረሰኞች</h2>
         <div id="receiptsContainer" class="admin-grid">
-            </div>
+        </div>
     </div>
 
+
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-    async function loadReceipts() {
-    try {
-        const response = await fetch('/admin/receipts');
-        const receipts = await response.json();
-        const container = document.getElementById('receiptsContainer');
-        
-        if (receipts.length === 0) {
-            container.innerHTML = '<p style="text-align:center; width:100%;">እስካሁን ምንም የደረሰኝ ምስል አልተላከም!</p>';
-            return;
+        async function loadReceipts() {
+            const container = document.getElementById('receiptsContainer');
+            try {
+                const response = await fetch('/admin/receipts');
+                const receipts = await response.json();
+
+                if (receipts.length === 0) {
+                    container.innerHTML = "<p>እስካሁን ምንም የተላከ የደረሰኝ ምስል የለም።</p>";
+                    return;
+                }
+
+                container.innerHTML = "";
+              // loadReceipts ፋንክሽን ውስጥ
+                    receipts.forEach(receipt => {
+                        const card = `
+                            <div class="receipt-card">
+                                <img src="${receipt.url}">
+                                <p><strong>ተጠቃሚ:</strong> ${receipt.username}</p> <p><strong>አገልግሎት:</strong> ${receipt.serviceName}</p> <button onclick="approvePayment('${receipt.name}', '${receipt.username}', '${receipt.serviceName}')">አጽድቅ</button>
+                            </div>
+                        `;
+                        container.innerHTML += card;
+                    });
+            } catch (error) {
+                console.error("ምስሎችን መጫን አልተቻለም:", error);
+            }
         }
 
-        container.innerHTML = ''; // የቆየውን ማጽዳት
-        receipts.forEach(file => {
-            const card = `
-                <div class="receipt-card">
-                    <img src="${file.url}" alt="Receipt" onclick="window.open('${file.url}')">
-                    <p style="font-size: 12px; color: #666; margin-top: 10px;">ፋይል፡ ${file.name}</p>
-                    <div class="btn-group">
-                        <button class="approve" onclick="action('${file.name}', 'approve')">አጽድቅ</button>
-                        <button class="reject" onclick="action('${file.name}', 'reject')">ሰርዝ</button>
-                    </div>
-                </div>
-            `;
-            container.innerHTML += card;
-        });
-    } catch (error) {
-        console.error("Error loading receipts:", error);
-    }
-}
+        // ዋናው የማጽደቂያ ፋንክሽን
+        async function approvePayment(id, username, serviceName) {
+            console.log("የሚጸድቀው አገልግሎት፦", serviceName);
+
+            try {
+                const response = await fetch('/admin/approve-payment', { // Path በትክክል መሆኑን አረጋግጥ
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id, username, serviceName: serviceName })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    alert("ክፍያው ጸድቋል!");
+                    location.reload();
+                } else {
+                    alert("ስህተት፦ " + (result.message || "ክፍያውን ማጽደቅ አልተቻለም"));
+                }
+            } catch (error) {
+                console.error("Error approving payment:", error);
+            }
+        }
+
+        window.onload = loadReceipts;
     </script>
 </body>
+
 </html>

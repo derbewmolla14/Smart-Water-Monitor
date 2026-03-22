@@ -20,30 +20,28 @@
     </div>
 
     <script>
-   async function checkAdmin() {
-    const password = document.getElementById('adminPass').value;
-    
+        async function checkAdmin() {
+    const password = document.getElementById('password').value;
     try {
         const response = await fetch('/admin/login', {
             method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json' 
-            },
-            body: JSON.stringify({ password: password })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ password })
         });
 
-        const result = await response.json();
-
-        if (result.success) {
-            // መግባት መቻሉን በ SessionStorage መመዝገብ
-            sessionStorage.setItem('isAdmin', 'true');
-            // ቀጥታ ወደ ዳሽቦርዱ መውሰድ
-            window.location.href = 'admin-dashboard.html';
-        } else {
-            alert(result.message || "መግባት አልተቻለም!");
+        // 404 ወይም ሌላ ስህተት ከሆነ እዚህ ጋር ይያዛል
+        if (!response.ok) {
+            const errorData = await response.json();
+            alert(errorData.message || "ስህተት ተፈጥሯል!");
+            return;
         }
-    } catch (error) {
-        console.error("Error:", error);
+
+        const data = await response.json();
+        if (data.success) {
+            window.location.href = '/admin-dashboard.html';
+        }
+    } catch (err) {
+        console.error("የመጣው ስህተት፦", err);
         alert("ከሰርቨር ጋር መገናኘት አልተቻለም!");
     }
 }

@@ -1,34 +1,21 @@
-// Login በተኑ ሲነካ የሚሰራ ፋንክሽን
-function loginUser() {
-    // እዚህ ጋር የፓስወርድ ቼክ ማድረግ ትችላለህ
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+// ==========================================
+// 1. Socket.io እና መጀመሪያ የሚሰሩ ቅንብሮች
+// ==========================================
+const socket = io();
+let currentTargetPage = "index.html"; // ለክፍያ ሂደት መድረሻ ገጽ
 
-    if (username === "admin" && password === "1234") { // ለምሳሌ
-        // በኮምፒውተሩ ላይ መግባቱን መመዝገብ
-        localStorage.setItem("isLoggedIn", "true");
-        // ወደ ቀጣዩ ገጽ መላክ
-        window.location.href = "about-app.html";
-    } else {
-        alert("ስህተት! እባክዎ ትክክለኛ መረጃ ያስገቡ።");
-    }
-}
+// 2. የቋንቋ ትርጉሞች (Translations)
 const translations = {
     am: {
-        // በአማርኛው (am) ውስጥ የሚጨመር
         "ta-title": "የታንከር ውሃ መጠን መቆጣጠሪያ",
         "ta-desc": "የታንከርዎን የውሃ መጠን በማንኛውም ቦታ ሆነው ለመቆጣጠር።",
-
         "qu-title": "የውሃ ጥራት",
         "qu-desc": "የውሃውን ንጽህና፣ ፒኤች (pH) እና የባክቴሪያ መኖርን ለመለየት።",
-        // --- አዲስ የተጨመሩ (Irrigation Card) ---
         "irr_title": "የመስኖ አፈር እርጥበት",
         "irr-desc": "የአፈርን እርጥበት በመለካት ለመስኖ እርሻዎ ተገቢውን ውሃ በሰዓቱ ለመስጠት።",
         "pay-btn": "አሁኑኑ ይክፈሉ",
         "gr-title": "የከርሰ ምድር ውሃ መጠን",
         "gr-disc": "የከርሰ ምድር ውሃ ሲያልቅ ፓምፑ እንዳይቃጠል በራሱ እንዲያቆም የሚያደርግ።",
-
-        // --- የድሮዎቹ (About App) ---
         "app-title": "ስለ Smart Water Monitor",
         "how-it-works-title": "ሲስተሙ እንዴት ይሰራል?",
         "app-intro": "ይህ ሲስተም የውሃ ማጠራቀሚያ ታንከሮችን መጠን በዘመናዊ መንገድ ለመቆጣጠር ታስቦ የተሰራ ነው።",
@@ -46,20 +33,15 @@ const translations = {
         "footer-text": "© 2026 አሀዱ ቴክ አካዳሚ። መብቱ በህግ የተጠበቀ ነው።"
     },
     en: {
-        // በእንግሊዝኛው (en) ውስጥ የሚጨመር
         "ta-title": "Tanker Amount Monitor",
         "ta-desc": "Monitor your tank's water level from anywhere, anytime.",
         "qu-title": "Water Quality",
         "qu-desc": "Detect water purity, pH levels, and the presence of bacteria.",
-
-        // --- አዲስ የተጨመሩ (Irrigation Card) ---
         "irr_title": "Irrigation Soil Moisture",
         "irr-desc": "Measure soil moisture to provide the right amount of water to your irrigation farm on time.",
         "pay-btn": "Pay Now",
-
         "gr-title": "Ground Water Level",
         "gr-disc": "Prevents the pump from burning out by automatically stopping it when groundwater runs out.",
-        // --- የድሮዎቹ (About App) ---
         "app-title": "About Smart Water Monitor",
         "how-it-works-title": "How it Works",
         "app-intro": "This system is designed to monitor water tank levels modernly.",
@@ -78,105 +60,223 @@ const translations = {
     }
 };
 
-// 1. የቋንቋ መቀየሪያ ተግባር
+// ==========================================
+// 3. የቋንቋ እና የ UI ተግባራት (UI Logic)
+// ==========================================
 function changeLang(lang) {
-    if (!translations[lang]) return; // ጥንቃቄ፡ ቋንቋው ከሌለ ዝም እንዲል
-
+    if (!translations[lang]) return;
     for (let id in translations[lang]) {
         const element = document.getElementById(id);
         if (element) {
             element.innerText = translations[lang][id];
         }
     }
-    // ምርጫውን በኮምፒውተሩ ላይ ማስቀመጥ
     localStorage.setItem('selectedLang', lang);
 }
+function updateUItoOpen(key) {
+    console.log("UI እየተቀየረ ነው ለ key:", key);
+    
+    const payBtn = document.getElementById(`pay-btn-${key}`);
+    const closedBtn = document.getElementById(`closed-btn-${key}`);
+    const openBtn = document.getElementById(`open-btn-${key}`);
 
-// ገጹ ሲከፈት የቀድሞውን ምርጫ በራሱ እንዲያመጣ
-document.addEventListener("DOMContentLoaded", () => {
-    const savedLang = localStorage.getItem('selectedLang') || 'am';
-    changeLang(savedLang);
-});
-
-// 2. Modal መክፈቻ (እነዚህ መስራት አለባቸው!)
-function openPaymentModal() {
-    console.log("Modal opening...");
-    document.getElementById("paymentModal").style.display = "block";
-}
-
-// 3. Modal መዝጊያ
-function closeModal() {
-    document.getElementById("paymentModal").style.display = "none";
-}
-
-// 4. የክፍያ ሂደት (የተስተካከለ)
-async function processChapa(method, targetPage) {
-    const email = localStorage.getItem("loggedUser") || "guest@example.com";
-
-    // ለተጠቃሚው መመሪያ መስጠት
-    const infoMessage = `ውድ ደንበኛችን በ ${method} በኩል ክፍያዎን ወደ +251937100547 ይላኩ። ከዛም ደረሰኙን በቴሌግራም ይላኩልን።`;
-    alert(infoMessage);
-
-    // ተጠቃሚው ለዛ አገልግሎት የተመደበው ገጽ ላይ እንዲሄድ ማድረግ
-    if (targetPage) {
-        window.location.href = targetPage;
+    // መክፈያ እና ዝግ መሆኑን የሚገልጹትን ደብቅ
+    if (payBtn) payBtn.style.setProperty('display', 'none', 'important');
+    if (closedBtn) closedBtn.style.setProperty('display', 'none', 'important');
+    
+    // Open በተኑን አሳይ
+    if (openBtn) {
+        openBtn.classList.add('show-open-btn'); 
+        // ለጥንቃቄ በቀጥታም display: block እንበለው
+        openBtn.style.setProperty('display', 'block', 'important');
+        console.log(key + " በተን አሁን መታየት አለበት!");
     } else {
-        window.location.href = "index.html"; // Default መድረሻ
+        console.error("ID አልተገኘም፦ open-btn-" + key);
     }
 }
 
-// Modal ለመክፈት የምንጠቀመው ጊዜያዊ ተለዋዋጭ
-let currentTargetPage = "index.html";
-
-function openPaymentModal(page) {
-    currentTargetPage = page; // የትኛው ገጽ መሄድ እንዳለበት እናስቀምጣለን
+// ==========================================
+// 4. የክፍያ እና ሞዳል ተግባራት (Payment Logic)
+// ==========================================
+function openPaymentModal(serviceName) {
+    console.log("ሞዳሉ እየተከፈተ ነው ለ፦ " + serviceName);
+    const selectedInput = document.getElementById('selectedService');
+    if (selectedInput) {
+        selectedInput.value = serviceName;
+    }
     document.getElementById("paymentModal").style.display = "block";
 }
 
-// በ Modal ውስጥ ያሉትን በተኖች ስንነካ
-function handlePayment(method) {
-    processChapa(method, currentTargetPage);
+function closeModal() {
+    document.getElementById("paymentModal").style.display = "none";
 }
-
-// 5. ገጹ ሲከፈት
-document.addEventListener("DOMContentLoaded", () => {
-    const savedLang = localStorage.getItem('selectedLang') || 'am';
-    changeLang(savedLang);
-    // ማሳሰቢያ፡ እዚህ ገጽ ላይ ሎጊን ቼክ ካደረግክ ሰው ገና አፑን ሳያይ ይባረራል
-    // ስለዚህ ለጊዜው ቼኩን ዳሽቦርድ ላይ ብቻ አድርገው
-});
-
-
-// ምስልን ወደ ሰርቨር ለመላክ (Upload) የሚያገለግል
 async function uploadReceipt() {
-    const fileInput = document.getElementById('receiptfile'); // በ HTML ላይ ያለህ የፋይል መምረጫ ID
+    const fileInput = document.getElementById('receiptInput');
     const file = fileInput.files[0];
+    
+    // 1. የአገልግሎቱን ስም ከ Input value ውስጥ በትክክል መውሰድ
+    const serviceNameValue = document.getElementById('selectedService').value;
+    
+    // 2. የተጠቃሚውን ስም ከ LocalStorage መውሰድ (ወይም 'Molla' ብለህ መጻፍ)
+    const loggedUser = localStorage.getItem('loggedUser') || 'Molla';
 
     if (!file) {
-        alert("እባክዎ መጀመሪያ የደረሰኝ ፎቶ ይምረጡ!");
+        alert("እባክዎ መጀመሪያ የደረሰኙን ምስል ይምረጡ!");
         return;
     }
 
     const formData = new FormData();
-    formData.append('receipt', file);
-    // ከተፈለገ የተጠቃሚ ስም መጨመር ይቻላል
-    formData.append('username', localStorage.getItem('loggedUser') || 'Guest');
+    formData.append('receipt', file); 
+    
+    // --- ትኩረት፦ እዚህ ጋር ጥቅስ ምልክት (' ') መኖር የለበትም! ---
+    formData.append('username', loggedUser); // 'user' ሳይሆን loggedUser የሚለውን ተለዋዋጭ
+    formData.append('serviceName', serviceNameValue); // 'service' ሳይሆን serviceNameValue የሚለውን ተለዋዋጭ
 
     try {
         const response = await fetch('/submit-payment', {
             method: 'POST',
             body: formData
         });
-
         const result = await response.json();
+        
         if (result.success) {
-            alert("ደረሰኙ በትክክል ተልኳል! አድሚን እስኪያጸድቅልዎ ይጠብቁ።");
-            closeModal(); // ሞዳሉን መዝጋት
-        } else {
-            alert("ስህተት፡ " + result.message);
+            alert("የመታወቂያ ምስሉ (ደረሰኙ) በትክክል ተልኳል!");
+            closeModal();
         }
     } catch (error) {
         console.error("Upload Error:", error);
-        alert("ከሰርቨር ጋር መገናኘት አልተቻለም።");
+    }
+}
+
+async function processChapa(method, targetPage) {
+    const infoMessage = `ውድ ደንበኛችን በ ${method} በኩል ክፍያዎን ወደ +251937100547 ይላኩ። ከዛም ደረሰኙን እዚህ ሲስተም ላይ ይጫኑ።`;
+    alert(infoMessage);
+    if (targetPage) window.location.href = targetPage;
+}
+
+function handlePayment(method) {
+    processChapa(method, currentTargetPage);
+}
+
+// ==========================================
+// 5. ሪል-ታይም የ Socket.io መልዕክት መቀበያ
+// ==========================================
+socket.on('paymentApproved', (data) => {
+    console.log("ከአድሚን መልዕክት ደርሷል:", data);
+    
+    const service = (data.serviceName || "").toLowerCase().trim();
+    let key = "";
+
+    // ስሞቹን ማዛመድ
+    if (service.includes('tank')) key = "tanker";
+    else if (service.includes('quality')) key = "quality";
+    else if (service.includes('soil')) key = "soil";
+    else if (service.includes('ground')) key = "ground";
+
+    if (key) {
+        // 1. ID-ዎቹን በትክክል መፈለግ
+        const payBtn = document.getElementById(`pay-btn-${key}`);
+        const closedBtn = document.getElementById(`closed-btn-${key}`);
+        const openBtn = document.getElementById(`open-btn-${key}`);
+
+        // 2. በግድ (Force) እንዲታዩ ማድረግ (!important በ JS)
+        if (payBtn) payBtn.setAttribute('style', 'display: none !important');
+        if (closedBtn) closedBtn.setAttribute('style', 'display: none !important');
+        
+        if (openBtn) {
+            openBtn.setAttribute('style', 'display: block !important');
+            
+            // 3. LocalStorage ካልሰራ በስተቀር ለጊዜው በተኑ እንዲቆይ ያደርጋል
+            try {
+                localStorage.setItem(`pay_status_${key}`, 'approved');
+            } catch (e) {
+                console.warn("Storage ተከልክሏል፣ ግን በተኑ መታየት አለበት።");
+            }
+            
+            alert(data.serviceName + " አገልግሎት አሁን ክፍት ሆኖልዎታል።");
+        } else {
+            console.error("ስህተት፡ open-btn-" + key + " የሚል ID በ HTML ውስጥ አልተገኘም!");
+        }
+    }
+});
+// socket.on('paymentApproved', (data) => {
+//     console.log("ከአድሚን መልዕክት ደርሷል:", data);
+    
+//     // 1. የመጣውን ስም ወደ ትናንሽ ፊደላት ቀይረን እናጽዳው
+//     const service = (data.serviceName || "").toLowerCase().trim();
+//     let key = "";
+
+//     // 2. ስሞቹን ከ ID-ዎቹ ጋር እናዛምድ
+//     if (service.includes('tank')) {
+//         key = "tanker";
+//     } else if (service.includes('quality')) {
+//         key = "quality";
+//     } else if (service.includes('soil')) {
+//         key = "soil";
+//     } else if (service.includes('ground')) {
+//         key = "ground";
+//     }
+
+//     // 3. በተኑን እንዲመጣ እናድርግ
+//     if (key) {
+//         const payBtn = document.getElementById(`pay-btn-${key}`);
+//         const closedBtn = document.getElementById(`closed-btn-${key}`);
+//         const openBtn = document.getElementById(`open-btn-${key}`);
+
+//         if (payBtn) payBtn.style.display = 'none';
+//         if (closedBtn) closedBtn.style.display = 'none';
+//         if (openBtn) {
+//             openBtn.style.display = 'block';
+//             localStorage.setItem(`pay_status_${key}`, 'approved');
+//             alert(data.serviceName + " አገልግሎት አሁን ክፍት ሆኖልዎታል።");
+//         }
+//     }
+// });
+// socket.on('paymentApproved', (data) => {
+//     console.log("ከአድሚን መልዕክት ደርሷል:", data);
+    
+//     // በዳታው ውስጥ serviceName ወይም service መኖሩን ቼክ እናደርጋለን
+//     const approvedService = data.serviceName || data.service; 
+    
+//     let key = "";
+//     if (approvedService === 'Tanker Monitor') key = "tanker";
+//     else if (approvedService === 'Water Quality') key = "quality";
+//     else if (approvedService === 'Soil Moisture') key = "soil";
+//     else if (approvedService === 'Ground Water') key = "ground";
+
+//     if (key) {
+//         updateUItoOpen(key);
+//         localStorage.setItem(`pay_status_${key}`, 'approved');
+//         alert(approvedService + " አገልግሎት አሁን ክፍት ሆኖልዎታል።");
+//     } else {
+//         console.error("ስሙ አልተገኘም! የመጣው ስም፦", approvedService);
+//     }
+// });
+
+// ==========================================
+// 6. ገጹ ሲከፈት (Init)
+// ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+    const services = ['tanker', 'quality', 'soil', 'ground'];
+    const savedLang = localStorage.getItem('selectedLang') || 'am';
+    changeLang(savedLang);
+    services.forEach(key => {
+        // LocalStorage ውስጥ 'approved' መሆኑን ቼክ ያደርጋል
+        if (localStorage.getItem(`pay_status_${key}`) === 'approved') {
+            updateUItoOpen(key);
+        }
+    });
+});
+
+// 7. ሎጊን ተግባር (አስፈላጊ ከሆነ)
+function loginUser() {
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    if (username === "admin" && password === "1234") {
+        localStorage.setItem("isLoggedIn", "true");
+        window.location.href = "about-app.html";
+    } else {
+        alert("ስህተት! እባክዎ ትክክለኛ መረጃ ያስገቡ።");
     }
 }
