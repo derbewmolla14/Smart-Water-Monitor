@@ -201,3 +201,15 @@ function openPaymentModal(serviceName) {
 function closeModal() {
     document.getElementById("paymentModal").style.display = "none";
 }
+
+function logout() {
+    localStorage.clear();
+    window.location.href = "login.html";
+}
+
+
+// --- Admin Navigation ---
+function goToAdmin() {
+    // ተጠቃሚውን ወደ አድሚን ሎጊን ገጽ ይወስደዋል
+    window.location.href = "admin-login.html";
+}

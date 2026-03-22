@@ -158,15 +158,3 @@ function updateDateTime() {
     }
 }
 setInterval(updateDateTime, 1000);
-
-function logout() {
-    localStorage.clear();
-    window.location.href = "login.html";
-}
-
-
-// --- Admin Navigation ---
-function goToAdmin() {
-    // ተጠቃሚውን ወደ አድሚን ሎጊን ገጽ ይወስደዋል
-    window.location.href = "admin-login.html";
-}
