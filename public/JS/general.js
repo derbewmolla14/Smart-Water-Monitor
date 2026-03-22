@@ -124,6 +124,7 @@ function sendFacebookStyleCode() {
     }
 }
 
+
 function verifyOTP() {
     let enteredOTP = document.getElementById("otp2").value;
     if (enteredOTP != "" && enteredOTP == facebookOTP) {
@@ -161,4 +162,11 @@ setInterval(updateDateTime, 1000);
 function logout() {
     localStorage.clear();
     window.location.href = "login.html";
+}
+
+
+// --- Admin Navigation ---
+function goToAdmin() {
+    // ተጠቃሚውን ወደ አድሚን ሎጊን ገጽ ይወስደዋል
+    window.location.href = "admin-login.html";
 }

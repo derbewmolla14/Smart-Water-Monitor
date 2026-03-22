@@ -16,6 +16,11 @@ const io = new Server(server, {
 // --- 1. Middleware (ሁልጊዜ ከሁሉም በላይ መሆን አለባቸው) ---
 app.use(express.json());
 app.use(express.static('public'));
+// server.js ላይ ከሌሎች app.use ጋር ይጨምሩ
+// server.js ውስጥ static folder መፍቀድ
+// እነዚህን ሁለት መስመሮች በ server.js ላይ ይተኳቸው
+app.use(express.static(path.join(__dirname, 'public')));
+// app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
 // CSP Header - ብሮውዘሩ እንዳይከለክል

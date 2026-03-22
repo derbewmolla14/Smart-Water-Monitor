@@ -104,7 +104,7 @@
             container.innerHTML = "<p>መረጃውን መጫን አልተቻለም። ሰርቨሩ መብራቱን አረጋግጥ።</p>";
         }
     }
-
+ window.onload = loadReceipts;
     // ማጽደቂያ
     async function approvePayment(id, username, serviceName) {
         if(!confirm(serviceName + " ክፍያ ይጽደቅ?")) return;
@@ -148,7 +148,15 @@
         alert("ማስተናገድ አልተቻለም!");
     }
 }
-    window.onload = loadReceipts;
+
+// በ receipts.forEach ውስጥ ያለውን ምስል እንዲህ ቀይረው
+document.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem("isAdminLoggedIn") !== "true") {
+        window.location.href = "admin-login.html";
+    }
+});
+// በአድሚን JS ውስጥ
+console.log("Image Path:", receipt.url);
 </script>
 </body>
 
