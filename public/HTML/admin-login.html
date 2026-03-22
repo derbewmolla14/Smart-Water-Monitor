@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Admin Login</title>
     <link rel="stylesheet" href="/CSS/about.css">
+     <link rel="icon" type="image/png" href="/images/mollaspacial1.png">
     <style>
         .login-box { max-width: 400px; margin: 100px auto; padding: 30px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); text-align: center; }
         input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
@@ -19,32 +20,36 @@
         <button onclick="checkAdmin()">ግባ</button>
     </div>
 
-    <script>
-        async function checkAdmin() {
-    const password = document.getElementById('password').value;
-    try {
-        const response = await fetch('/admin/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ password })
-        });
+   <script>
+    async function checkAdmin() {
+        // የ input ID-ው 'adminPass' መሆኑን አረጋግጥ
+        const passwordValue = document.getElementById('adminPass').value;
 
-        // 404 ወይም ሌላ ስህተት ከሆነ እዚህ ጋር ይያዛል
-        if (!response.ok) {
-            const errorData = await response.json();
-            alert(errorData.message || "ስህተት ተፈጥሯል!");
+        if (!passwordValue) {
+            alert("እባክዎ መጀመሪያ የይለፍ ቃል ያስገቡ!");
             return;
         }
 
-        const data = await response.json();
-        if (data.success) {
-            window.location.href = '/admin-dashboard.html';
+        try {
+            const response = await fetch('/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password: passwordValue }) // በትክክል ተልኳል
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // በሰርቨሩ Route መሰረት ወደ ዳሽቦርድ ይሄዳል
+                window.location.href = '/admin-dashboard';
+            } else {
+                alert(data.message || "የይለፍ ቃል ስህተት ነው!");
+            }
+        } catch (err) {
+            console.error("የመጣው ስህተት፦", err);
+            alert("ከሰርቨር ጋር መገናኘት አልተቻለም!");
         }
-    } catch (err) {
-        console.error("የመጣው ስህተት፦", err);
-        alert("ከሰርቨር ጋር መገናኘት አልተቻለም!");
     }
-}
-    </script>
+</script>
 </body>
 </html>

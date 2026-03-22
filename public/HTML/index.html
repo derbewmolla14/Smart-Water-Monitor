@@ -64,7 +64,7 @@
         })();
 
         // Socket Connection
-        const socket = io("https://smart-water-monitor-7kui.onrender.com");
+        socket = io("https://smart-water-monitor-7kui.onrender.com");
 
         socket.on('levelUpdate', (newLevel) => {
             if (typeof updateWaterLevel === 'function') {

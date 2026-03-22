@@ -1,151 +1,40 @@
-// Login በተኑ ሲነካ የሚሰራ ፋንክሽን
+// 1. የ Socket.io አጀማመር (Render URL-ህን በመጠቀም)
+const socket = io("https://smart-water-monitor-7kui.onrender.com", {
+    transports: ['websocket', 'polling']
+});
+
+socket.on("connect", () => {
+    console.log("ከሰርቨር ጋር ተገናኝቷል! (Connected to Server)");
+});
+
+// 2. Login በተኑ ሲነካ የሚሰራ ፋንክሽን
 function loginUser() {
-    // እዚህ ጋር የፓስወርድ ቼክ ማድረግ ትችላለህ
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
 
-    if (username === "admin" && password === "1234") { // ለምሳሌ
-        // በኮምፒውተሩ ላይ መግባቱን መመዝገብ
+    if (username === "admin" && password === "1234") { 
         localStorage.setItem("isLoggedIn", "true");
-        // ወደ ቀጣዩ ገጽ መላክ
         window.location.href = "about-app.html";
     } else {
         alert("ስህተት! እባክዎ ትክክለኛ መረጃ ያስገቡ።");
     }
 }
-// // 1. ሰዓት እና ቀን በየሰከንዱ እንዲታደስ የሚያደርግ ፈንክሽን
-// function updateDateTime() {
-//     const now = new Date();
-//     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-//     document.getElementById('date-time').innerText = now.toLocaleDateString('en-US', options);
-// }
 
-// // 2. የውሃውን መጠን በዳሽቦርዱ ላይ ለመቀየር የሚያገለግል ፈንክሽን
-// function updateWaterLevel(percent) {
-//     // ከ 0 እስከ 100 መሆኑን ማረጋገጥ
-//     if (percent < 0) percent = 0;
-//     if (percent > 100) percent = 100;
-
-//     // በ HTML ላይ ያሉትን ክፍሎች ማግኘት
-//     const waterElement = document.getElementById('water-level');
-//     const percentText = document.getElementById('percent-val');
-//     const volumeText = document.getElementById('volume-val');
-
-//     // ግራፊክሱን መቀየር
-//     waterElement.style.height = percent + "%";
-    
-//     // ጽሁፉን መቀየር
-//     percentText.innerText = percent;
-    
-//     // የሊትር መጠን ማስላት (ለምሳሌ ታንከሩ 1000 ሊትር ቢሆን)
-//     const totalVolume = 1000;
-//     const currentVolume = (percent / 100) * totalVolume;
-//     volumeText.innerText = currentVolume;
-// }
-
-// // 3. በየሰከንዱ ሰዓቱን አድስ
-// setInterval(updateDateTime, 1000);
-
-// // ለሙከራ ያህል፡ ከ 3 ሰከንድ በኋላ የውሃውን መጠን ወደ 85% ቀይረው
-// setTimeout(() => {
-//     updateWaterLevel(85);
-// }, 3000);
-
-
-// const socket = io();
-
-// // ሰርቨሩ 'levelUpdate' የሚል መረጃ ሲልክልን ተቀበል
-// socket.on('levelUpdate', (newLevel) => {
-//     updateWaterLevel(newLevel); // ቀደም ብለን የሰራነው ፈንክሽን
-// });
-
-// /*
-// 1. MongoDB Setup
-// መጀመሪያ ኮምፒውተርህ ላይ MongoDB መጫን ወይም የኦንላይን አገልግሎቱን (MongoDB Atlas) መጠቀም ትችላለህ። በመቀጠል በፕሮጀክትህ ውስጥ አስፈላጊውን ጥቅል (Package) ጫን፦
-
-// Bash
-// npm install mongoose
-// 2. ዳታውን እንዴት እንደምናስቀምጥ (Schema)
-// መረጃው በዳታቤዝ ውስጥ በምን አይነት መልክ ይቀመጥ የሚለውን መወሰን አለብን። በ server.js ፋይልህ ላይ የሚከተለውን Schema ጨምር፦
-// */
-
-// // const mongoose = require('mongoose');
-
-// // // ከዳታቤዝ ጋር መገናኘት
-// // mongoose.connect('mongodb://localhost:27017/waterMonitor')
-// //   .then(() => console.log('ዳታቤዝ ተገናኝቷል!'))
-// //   .catch(err => console.error('ግንኙነት አልተሳካም:', err));
-
-// // // የዳታ አወቃቀር (Schema)
-// // const waterLogSchema = new mongoose.Schema({
-// //     level: Number,
-// //     timestamp: { type: Date, default: Date.now }
-// // });
-
-// // const WaterLog = mongoose.model('WaterLog', waterLogSchema);
-
-
-
-// // 3. ዳታውን መቀበል እና ማስቀመጥ
-// // ቅድም የሰራነውን /update-level የሚለውን መንገድ (Route) በማሻሻል፣ መረጃው ሲመጣ ወደ ዳታቤዝ እንዲገባ እናደርጋለን፦
-// app.get('/update-level', async (req, res) => {
-//     const level = req.query.level;
-
-//     try {
-//         // 1. መረጃውን ዳታቤዝ ውስጥ መመዝገብ
-//         const newLog = new WaterLog({ level: level });
-//         await newLog.save();
-
-//         // 2. ለዳሽቦርዱ በ Real-time መላክ
-//         io.emit('levelUpdate', level);
-
-//         res.status(200).send("ዳታው ተመዝግቧል!");
-//     } catch (error) {
-//         res.status(500).send("ስህተት ተፈጥሯል");
-//     }
-// });
-
-// // 4. የቆየ ዳታን (History) ማሳየት
-// // አሁን ደግሞ ዳሽቦርድህ ሲከፈት ያለፉትን 24 ሰዓታት መረጃ እንዲያሳይ አዲስ መንገድ (API Endpoint) እንፈጥራለን፦
-// app.get('/get-history', async (req, res) => {
-//     // የመጨረሻዎቹን 20 መዝገቦች አውጣ
-//     const history = await WaterLog.find().sort({ timestamp: -1 }).limit(20);
-//     res.json(history);
-// });
-
-// document.addEventListener("DOMContentLoaded", () => {
-//     if (localStorage.getItem("isLoggedIn") !== "true") {
-//         window.location.href = "login.html";
-//     } else {
-//         // የተጠቃሚውን ስም በዳሽቦርዱ ላይ ለማሳየት (ከተፈለገ)
-//         const userName = localStorage.getItem("loggedUserName");
-//         console.log("Welcome " + userName);
-//     }
-
-    
-// });
-
-
-
-// ተጠቃሚው Login ማድረጉን ቼክ ማድረግ
-const loggedUser = localStorage.getItem("isLoggedIn");
-
-if (!loggedUser) {
-    // Login ካላደረገ ወደ login.html መልሰው
-    window.location.href = "login.html";
-}
-const socket = io();
-
-// 1. ሰዓት እና ቀን አድስ
+// 3. ሰዓት እና ቀን አድስ
 function updateDateTime() {
     const now = new Date();
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    const options = { 
+        weekday: 'long', year: 'numeric', month: 'long', 
+        day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' 
+    };
     const dtElement = document.getElementById('date-time');
-    if (dtElement) dtElement.innerText = now.toLocaleDateString('en-US', options);
+    if (dtElement) {
+        dtElement.innerText = now.toLocaleDateString('en-US', options);
+    }
 }
 setInterval(updateDateTime, 1000);
 
-// 2. የውሃ መጠን ግራፊክስ መቀየሪያ
+// 4. የውሃ መጠን ግራፊክስ መቀየሪያ
 function updateWaterLevel(percent) {
     percent = Math.max(0, Math.min(100, percent));
 
@@ -158,49 +47,54 @@ function updateWaterLevel(percent) {
     if (volumeText) volumeText.innerText = (percent / 100) * 1000; // 1000L tank
 }
 
-// 3. Socket.io መረጃ ሲመጣ
+// 5. Socket.io መረጃ ሲመጣ (Real-time update)
 socket.on('levelUpdate', (newLevel) => {
+    console.log("አዲስ የውሃ መጠን ደርሷል፦", newLevel);
     updateWaterLevel(newLevel);
 });
 
-// 4. Login Check
+// 6. ገጹ ሲከፈት የሚሰሩ ስራዎች (Login Check እና ጅማሮ)
 document.addEventListener("DOMContentLoaded", () => {
-    if (localStorage.getItem("isLoggedIn") !== "true") {
-        window.location.href = "login.html";
+    // Login ካላደረገ ወደ login.html መልሰው (ከ about-app.html ገጽ ላይ ከሆንክ)
+    const currentPage = window.location.pathname;
+    if (!currentPage.includes('login.html')) {
+        if (localStorage.getItem("isLoggedIn") !== "true") {
+            window.location.href = "login.html";
+        }
     }
+
+    // የመጀመሪያ ስራዎች
     updateDateTime();
-});
-
-
-// script.js
-const socket = io("https://smart-water-monitor-7kui.onrender.com"); 
-
-socket.on("connect", () => {
-    console.log("Connected to Server!");
-});
-
-
-
-// // ቋንቋ መቀየሪያ ተግባር
-// let currentLang = localStorage.getItem("lang") || "en";
-
-// function updateUI() {
-//     const elements = document.querySelectorAll("[data-en]");
-//     elements.forEach(el => {
-//         el.innerText = el.getAttribute(`data-${currentLang}`);
-//     });
     
-//     const btn = document.getElementById("lang-toggle");
-//     if (btn) {
-//         btn.innerText = currentLang === "en" ? "አማርኛ" : "English";
-//     }
-// }
+    // updateUI ፋንክሽን ካለህ እዚህ ጋር ጥራው
+    if (typeof updateUI === "function") {
+        updateUI();
+    }
+});
+socket.on('paymentRejected', (data) => {
+    // 1. የትኛው አገልግሎት እንደሆነ ለይተን እንወቅ (ለምሳሌ tanker, quality ወዘተ)
+    const service = data.serviceName.toLowerCase();
+    let key = "";
 
-// function toggleLanguage() {
-//     currentLang = currentLang === "en" ? "am" : "en";
-//     localStorage.setItem("lang", currentLang);
-//     updateUI();
-// }
+    if (service.includes('tank')) key = "tanker";
+    else if (service.includes('quality')) key = "quality";
+    else if (service.includes('soil')) key = "soil";
+    else if (service.includes('ground')) key = "ground";
 
-// ገጹ ሲከፈት ያለውን ምርጫ ተግብር
-document.addEventListener("DOMContentLoaded", updateUI);
+    if (key) {
+        // 2. የተቀመጠውን የክፍያ ሁኔታ (Status) ከ LocalStorage እናጥፋው
+        localStorage.removeItem(`pay_status_${key}`);
+
+        // 3. በተኖቹን እናስተካክል
+        const payBtn = document.getElementById(`pay-btn-${key}`);
+        const openBtn = document.getElementById(`open-btn-${key}`);
+        const closedBtn = document.getElementById(`closed-btn-${key}`);
+
+        if (payBtn) payBtn.style.display = 'block';     // 'Pay' እንዲመጣ
+        if (closedBtn) closedBtn.style.display = 'block'; // 'Closed' ምስሉ እንዲመጣ
+        if (openBtn) openBtn.style.display = 'none';      // 'Open' እንዲጠፋ
+
+        // 4. ለተጠቃሚው መልዕክት እናሳይ
+        alert("⚠️ ማሳሰቢያ፦ የ " + data.serviceName + " ክፍያዎ ውድቅ ተደርጓል!\nምክንያት፦ " + data.reason);
+    }
+});

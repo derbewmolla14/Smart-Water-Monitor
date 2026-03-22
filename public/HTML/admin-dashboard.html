@@ -72,59 +72,84 @@
 
 
     <script src="/socket.io/socket.io.js"></script>
-    <script>
-        async function loadReceipts() {
-            const container = document.getElementById('receiptsContainer');
-            try {
-                const response = await fetch('/admin/receipts');
-                const receipts = await response.json();
+  <script>
+    async function loadReceipts() {
+        const container = document.getElementById('receiptsContainer');
+        try {
+            const response = await fetch('/admin/receipts');
+            const receipts = await response.json();
 
-                if (receipts.length === 0) {
-                    container.innerHTML = "<p>እስካሁን ምንም የተላከ የደረሰኝ ምስል የለም።</p>";
-                    return;
-                }
-
-                container.innerHTML = "";
-              // loadReceipts ፋንክሽን ውስጥ
-                    receipts.forEach(receipt => {
-                        const card = `
-                            <div class="receipt-card">
-                                <img src="${receipt.url}">
-                                <p><strong>ተጠቃሚ:</strong> ${receipt.username}</p> <p><strong>አገልግሎት:</strong> ${receipt.serviceName}</p> <button onclick="approvePayment('${receipt.name}', '${receipt.username}', '${receipt.serviceName}')">አጽድቅ</button>
-                            </div>
-                        `;
-                        container.innerHTML += card;
-                    });
-            } catch (error) {
-                console.error("ምስሎችን መጫን አልተቻለም:", error);
+            if (!receipts || receipts.length === 0) {
+                container.innerHTML = "<p style='text-align:center; width:100%;'>እስካሁን ምንም የተላከ የደረሰኝ ምስል የለም።</p>";
+                return;
             }
+
+            container.innerHTML = "";
+            receipts.forEach(receipt => {
+                const card = `
+                    <div class="receipt-card">
+                        <img src="${receipt.url}" alt="Receipt" onclick="window.open(this.src)">
+                        <p><strong>ተጠቃሚ:</strong> ${receipt.username}</p>
+                        <p><strong>አገልግሎት:</strong> ${receipt.serviceName}</p>
+                        <div class="btn-group">
+                            <button class="approve" onclick="approvePayment('${receipt._id}', '${receipt.username}', '${receipt.serviceName}')">አጽድቅ</button>
+                            <button class="reject" onclick="rejectPayment('${receipt.serviceName}', '${receipt.username}')">ውድቅ አድርግ</button>
+                        </div>
+                    </div>
+                `;
+                container.innerHTML += card;
+            });
+        } catch (error) {
+            console.error("ምስሎችን መጫን አልተቻለም:", error);
+            container.innerHTML = "<p>መረጃውን መጫን አልተቻለም። ሰርቨሩ መብራቱን አረጋግጥ።</p>";
         }
+    }
 
-        // ዋናው የማጽደቂያ ፋንክሽን
-        async function approvePayment(id, username, serviceName) {
-            console.log("የሚጸድቀው አገልግሎት፦", serviceName);
+    // ማጽደቂያ
+    async function approvePayment(id, username, serviceName) {
+        if(!confirm(serviceName + " ክፍያ ይጽደቅ?")) return;
 
-            try {
-                const response = await fetch('/admin/approve-payment', { // Path በትክክል መሆኑን አረጋግጥ
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ id, username, serviceName: serviceName })
-                });
+        try {
+            const response = await fetch('/admin/approve-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ id, username, serviceName })
+            });
 
-                const result = await response.json();
-                if (result.success) {
-                    alert("ክፍያው ጸድቋል!");
-                    location.reload();
-                } else {
-                    alert("ስህተት፦ " + (result.message || "ክፍያውን ማጽደቅ አልተቻለም"));
-                }
-            } catch (error) {
-                console.error("Error approving payment:", error);
+            const result = await response.json();
+            if (result.success) {
+                alert("ክፍያው ጸድቋል! ተጠቃሚው 'Open' በተን ያገኛል።");
+                location.reload();
             }
+        } catch (error) {
+            alert("ማጽደቅ አልተቻለም።");
         }
+    }
 
-        window.onload = loadReceipts;
-    </script>
+    // ውድቅ ማድረጊያ (ቀደም ብለን የሰራነው)
+    async function rejectPayment(serviceName, username) {
+    const reason = prompt("ለምን ውድቅ ተደረገ? (ለምሳሌ፡ ምስሉ አይነበብም)");
+    if (!reason) return; // cancel ከተባለ ይቁም
+
+    try {
+        const response = await fetch('/admin/reject-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ serviceName, username, reason })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert("ለተጠቃሚው የውድቅ መልዕክት ተልኳል!");
+            location.reload(); // ገጹን አድስ
+        }
+    } catch (error) {
+        console.error("Error:", error);
+        alert("ማስተናገድ አልተቻለም!");
+    }
+}
+    window.onload = loadReceipts;
+</script>
 </body>
 
 </html>
